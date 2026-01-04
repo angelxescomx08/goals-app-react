@@ -40,11 +40,11 @@ export const GoalByIdPage = () => {
             )}
           />
           <Controller
-            name="goal_type"
+            name="goalType"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="goal_type">
+                <FieldLabel htmlFor="goalType">
                   Tipo de meta
                 </FieldLabel>
                 <Select onValueChange={field.onChange} value={field.value ?? "target"}>
@@ -65,11 +65,11 @@ export const GoalByIdPage = () => {
           />
           {showTargetAndUnit && <div className="flex gap-2 items-end">
             <Controller
-              name="unit_id"
+              name="unitId"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="unit_id">
+                  <FieldLabel htmlFor="unitId">
                     Unidad de medida
                   </FieldLabel>
                   <Select onValueChange={field.onChange} value={field.value ?? "null"}>

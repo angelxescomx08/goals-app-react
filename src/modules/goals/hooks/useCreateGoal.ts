@@ -22,10 +22,10 @@ export const useCreateGoal = () => {
     defaultValues: {
       title: "",
       description: "",
-      goal_type: "target",
-      parent_goal_id: null,
+      goalType: "target",
+      parentGoalId: null,
       target: 0,
-      unit_id: null,
+      unitId: null,
     },
   })
 
@@ -46,15 +46,15 @@ export const useCreateGoal = () => {
   })
 
   useEffect(() => {
-    if (form.getValues("goal_type") === "target") {
-      form.setValue("unit_id", null)
+    if (form.getValues("goalType") === "target") {
+      form.setValue("unitId", null)
       form.setValue("target", 0)
       setShowTargetAndUnit(true)
     } else {
       setShowTargetAndUnit(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.watch("goal_type")])
+  }, [form.watch("goalType")])
 
   return {
     form,
