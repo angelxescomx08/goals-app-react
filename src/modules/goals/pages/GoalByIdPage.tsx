@@ -1,21 +1,22 @@
+import { useParams } from "react-router"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { useCreateGoal } from "../hooks/useCreateGoal"
 import { Controller } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { CreateUnitDrawer } from "@/modules/units/components/CreateUnitDrawer"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Loader2Icon, PlusIcon } from "lucide-react"
-import { CreateUnitDrawer } from "@/modules/units/components/CreateUnitDrawer"
+import { Edit2Icon, Loader2Icon } from "lucide-react"
+import { useEditGoal } from "@/modules/goals/hooks/useEditGoal"
 
-export const CreateGoalPage = () => {
-
-  const { form, createGoalMutation, showTargetAndUnit, units } = useCreateGoal()
+export const GoalByIdPage = () => {
+  const { id } = useParams()
+  const { form, editGoalMutation, showTargetAndUnit, units } = useEditGoal(id ?? "")
 
   return (
     <div>
       <h1 className="text-2xl font-bold">Crear meta</h1>
-      <form onSubmit={form.handleSubmit((data) => createGoalMutation.mutate(data))}>
+      <form onSubmit={form.handleSubmit((data) => editGoalMutation.mutate(data))}>
         <FieldGroup>
           <Controller
             name="title"
@@ -137,16 +138,16 @@ export const CreateGoalPage = () => {
               </Field>
             )}
           />
-          <Button type="submit" disabled={createGoalMutation.isPending}>
-            {createGoalMutation.isPending ? (
+          <Button type="submit" disabled={editGoalMutation.isPending}>
+            {editGoalMutation.isPending ? (
               <>
                 <Loader2Icon className="w-4 h-4 animate-spin" />
-                Creando...
+                Actualizando...
               </>
             ) : (
               <>
-                <PlusIcon className="w-4 h-4" />
-                Crear meta
+                <Edit2Icon className="w-4 h-4" />
+                Actualizar meta
               </>
             )}
           </Button>

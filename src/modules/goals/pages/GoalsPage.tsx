@@ -9,7 +9,7 @@ export const GoalsPage = () => {
   const { goals } = useInfiniteGoalsByUser()
 
   return (
-    <main className="container p-2">
+    <div>
       <Link to="/panel/goals/create" className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md p-2">
         <Plus className="size-6" />
         <span className="text-sm font-medium">Crear meta</span>
@@ -31,6 +31,6 @@ export const GoalsPage = () => {
           </div>}
         />
       }
-    </main>
+    </div>
   )
 }
