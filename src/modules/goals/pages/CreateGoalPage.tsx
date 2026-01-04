@@ -5,17 +5,17 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { PlusIcon } from "lucide-react"
+import { Loader2Icon, PlusIcon } from "lucide-react"
 import { CreateUnitDrawer } from "@/modules/units/components/CreateUnitDrawer"
 
 export const CreateGoalPage = () => {
 
-  const { form, handleSubmit, showTargetAndUnit, units } = useCreateGoal()
+  const { form, createGoalMutation, showTargetAndUnit, units } = useCreateGoal()
 
   return (
     <main className="container p-2">
       <h1 className="text-2xl font-bold">Crear meta</h1>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
+      <form onSubmit={form.handleSubmit((data) => createGoalMutation.mutate(data))}>
         <FieldGroup>
           <Controller
             name="title"
@@ -71,7 +71,7 @@ export const CreateGoalPage = () => {
                   <FieldLabel htmlFor="unit_id">
                     Unidad de medida
                   </FieldLabel>
-                  <Select {...field} value={field.value ?? "null"}>
+                  <Select onValueChange={field.onChange} value={field.value ?? "null"}>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecciona un tipo de meta" />
                     </SelectTrigger>
@@ -102,7 +102,8 @@ export const CreateGoalPage = () => {
                 <Input
                   {...field}
                   type="number"
-                  value={field.value ?? ""}
+                  value={field.value ? Number(field.value) : 0}
+                  onChange={(e) => field.onChange(Number(e.target.value) || 0)}
                   id="target"
                   aria-invalid={fieldState.invalid}
                   placeholder="100"
@@ -136,9 +137,18 @@ export const CreateGoalPage = () => {
               </Field>
             )}
           />
-          <Button type="submit">
-            Crear meta
-            <PlusIcon className="w-4 h-4" />
+          <Button type="submit" disabled={createGoalMutation.isPending}>
+            {createGoalMutation.isPending ? (
+              <>
+                <Loader2Icon className="w-4 h-4 animate-spin" />
+                Creando...
+              </>
+            ) : (
+              <>
+                <PlusIcon className="w-4 h-4" />
+                Crear meta
+              </>
+            )}
           </Button>
         </FieldGroup>
       </form>

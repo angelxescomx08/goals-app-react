@@ -1,14 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { createGoalSchema, CreateGoalSchema } from "../schemas/goalSchema"
+import { createGoalSchema, type CreateGoalSchema } from "../schemas/goalSchema"
 import { createGoal } from "../actions/goalsActions"
 import { useEffect, useState } from "react"
-import { useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
+import { KEY, useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
+import { useNavigate } from "react-router"
+import { authClient } from "@/lib/auth"
 
 export const useCreateGoal = () => {
 
   const [showTargetAndUnit, setShowTargetAndUnit] = useState(false)
   const { units } = useUnitsByUser()
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const session = authClient.useSession()
 
   const form = useForm<CreateGoalSchema>({
     resolver: zodResolver(createGoalSchema),
@@ -17,28 +24,41 @@ export const useCreateGoal = () => {
       description: "",
       goal_type: "target",
       parent_goal_id: null,
-      target: null,
+      target: 0,
       unit_id: null,
     },
   })
 
-  const handleSubmit = async (data: CreateGoalSchema) => {
-    return await createGoal(data)
-  }
+  const createGoalMutation = useMutation({
+    mutationFn: createGoal,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey:
+          [KEY, { userId: session.data?.user?.id }]
+      })
+      toast.success("Meta creada correctamente")
+      form.reset()
+      navigate("/panel")
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
 
   useEffect(() => {
     if (form.getValues("goal_type") === "target") {
       form.setValue("unit_id", null)
-      form.setValue("target", null)
+      form.setValue("target", 0)
       setShowTargetAndUnit(true)
     } else {
       setShowTargetAndUnit(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.watch("goal_type")])
 
   return {
     form,
-    handleSubmit,
+    createGoalMutation,
     showTargetAndUnit,
     units,
   }

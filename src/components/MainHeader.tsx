@@ -18,6 +18,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth";
+import { Link } from "react-router";
 
 export function MainHeader() {
 
@@ -44,22 +45,22 @@ export function MainHeader() {
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-8">
-                <MobileNavLink href="/goals" icon={<Target className="h-5 w-5" />} label="Mis Metas" />
-                <MobileNavLink href="/units" icon={<LayoutGrid className="h-5 w-5" />} label="Unidades" />
-                <MobileNavLink href="/settings" icon={<Settings className="h-5 w-5" />} label="Configuración" />
+                <MobileNavLink href="/panel" icon={<Target className="h-5 w-5" />} label="Mis Metas" />
+                <MobileNavLink href="/panel/units" icon={<LayoutGrid className="h-5 w-5" />} label="Unidades" />
+                <MobileNavLink href="/panel/settings" icon={<Settings className="h-5 w-5" />} label="Configuración" />
               </nav>
             </SheetContent>
           </Sheet>
 
-          <a href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <Target className="h-6 w-6 text-primary hidden md:block" />
             <span className="font-bold text-xl tracking-tight">GoalTracker</span>
-          </a>
+          </Link>
 
           {/* Nav para Desktop (Hidden en mobile) */}
           <nav className="hidden md:flex items-center gap-6 ml-6">
-            <a href="/goals" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Metas</a>
-            <a href="/units" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Unidades</a>
+            <Link to="/panel" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Metas</Link>
+            <Link to="/panel/units" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Unidades</Link>
           </nav>
         </div>
 
@@ -101,12 +102,12 @@ export function MainHeader() {
 
 function MobileNavLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
   return (
-    <a
-      href={href}
+    <Link
+      to={href}
       className="flex items-center gap-3 px-3 py-2 text-lg font-medium rounded-md hover:bg-accent transition-all"
     >
       {icon}
       {label}
-    </a>
+    </Link>
   );
 }
