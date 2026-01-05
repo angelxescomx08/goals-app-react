@@ -49,14 +49,6 @@ export const useEditGoal = (id: string) => {
 
   useEffect(() => {
     if (goal.data) {
-      console.log({
-        title: goal.data.data.title,
-        description: goal.data.data.description,
-        goalType: goal.data.data.goalType,
-        parentGoalId: goal.data.data.parentGoalId,
-        unitId: goal.data.data.units.id,
-        target: goal.data.data.target,
-      })
       form.reset({
         title: goal.data.data.title,
         description: goal.data.data.description,

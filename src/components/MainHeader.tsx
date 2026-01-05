@@ -45,7 +45,7 @@ export function MainHeader() {
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-8">
-                <MobileNavLink href="/panel" icon={<Target className="h-5 w-5" />} label="Mis Metas" />
+                <MobileNavLink href="/panel/goals" icon={<Target className="h-5 w-5" />} label="Mis Metas" />
                 <MobileNavLink href="/panel/units" icon={<LayoutGrid className="h-5 w-5" />} label="Unidades" />
                 <MobileNavLink href="/panel/settings" icon={<Settings className="h-5 w-5" />} label="Configuración" />
               </nav>
@@ -59,7 +59,7 @@ export function MainHeader() {
 
           {/* Nav para Desktop (Hidden en mobile) */}
           <nav className="hidden md:flex items-center gap-6 ml-6">
-            <Link to="/panel" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Metas</Link>
+            <Link to="/panel/goals" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Metas</Link>
             <Link to="/panel/units" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Unidades</Link>
           </nav>
         </div>
