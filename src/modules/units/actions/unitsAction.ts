@@ -1,5 +1,5 @@
 import { api } from "@/lib/api"
-import { CreateUnitSchema, UnitSchema } from "../schemas/unitSchema"
+import { type CreateUnitSchema, type UnitSchema } from "@/modules/units/schemas/unitSchema"
 
 export async function getUnits() {
   return api.get<{

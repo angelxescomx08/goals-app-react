@@ -1,5 +1,5 @@
 import { LoginPage } from "@/modules/auth/pages/LoginPage";
-import { RouteObject } from "react-router";
+import { type RouteObject } from "react-router";
 import { RegisterPage } from "@/modules/auth/pages/RegisterPage";
 import { PublicRoute } from "../PublicRoute";
 

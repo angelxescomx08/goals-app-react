@@ -1,5 +1,5 @@
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { GoalSchema } from "../schemas/goalSchema"
+import { type GoalSchema } from "@/modules/goals/schemas/goalSchema"
 import { Link } from "react-router";
 import { EyeIcon } from "lucide-react";
 

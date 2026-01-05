@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form"
-import { createUnitSchema, CreateUnitSchema } from "../schemas/unitSchema"
+import { createUnitSchema, type CreateUnitSchema } from "@/modules/units/schemas/unitSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createUnit } from "../actions/unitsAction"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
