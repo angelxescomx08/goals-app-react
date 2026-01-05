@@ -18,11 +18,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export function MainHeader() {
 
   const { data: session } = authClient.useSession();
+  const navigate = useNavigate();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -88,7 +89,17 @@ export function MainHeader() {
                 <span>Perfil</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive focus:bg-destructive/10">
+              <DropdownMenuItem 
+                className="text-destructive focus:bg-destructive/10" 
+                onClick={async () => {
+                  await authClient.signOut({
+                    fetchOptions: {
+                      onSuccess: () => {
+                        navigate("/auth/login");
+                      },
+                    },
+                  });
+                }}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Cerrar Sesión</span>
               </DropdownMenuItem>
