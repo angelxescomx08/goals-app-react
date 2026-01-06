@@ -24,7 +24,7 @@ export const useLogin = () => {
   const signInWithGoogle = async () => {
     return await authClient.signIn.social({
       provider: "google",
-      callbackURL: import.meta.env.VITE_URL_FRONTEND + "/panel",
+      callbackURL: import.meta.env.VITE_URL_FRONTEND,
       errorCallbackURL: import.meta.env.VITE_URL_FRONTEND + "/auth/login?error=true",
     })
   }
