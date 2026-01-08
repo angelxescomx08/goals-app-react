@@ -2,6 +2,7 @@ import type { RouteObject } from "react-router";
 import { PrivateRoute } from "@/routes/PrivateRoute";
 import { goalsRoutes } from "@/modules/goals/routes/goalsRoutes";
 import { PanelPage } from "@/modules/goals/pages/PanelPage";
+import { unitsRoutes } from "@/modules/units/routes/UnitsRoutes";
 
 export const PanelRouter: RouteObject = {
   path: "/panel",
@@ -11,6 +12,7 @@ export const PanelRouter: RouteObject = {
       path: "",
       element: <PanelPage />,
     },
-    goalsRoutes
+    goalsRoutes,
+    unitsRoutes
   ]
 };
