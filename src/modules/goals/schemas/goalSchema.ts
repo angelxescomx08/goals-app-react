@@ -43,5 +43,12 @@ export const createGoalSchema = goalSchema.omit({
   }
 })
 
+export const statisticsSchema = z.object({
+  totalGoals: z.number(),
+  totalCompletedGoals: z.number(),
+  pendingGoals: z.number(),
+})
+
 export type GoalSchema = z.infer<typeof goalSchema>
 export type CreateGoalSchema = z.infer<typeof createGoalSchema>
+export type StatisticsSchema = z.infer<typeof statisticsSchema>
