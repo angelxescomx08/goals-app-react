@@ -1,7 +1,7 @@
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { type GoalSchema } from "@/modules/goals/schemas/goalSchema"
 import { Link } from "react-router";
-import { EyeIcon } from "lucide-react";
+import { Edit2Icon, EyeIcon } from "lucide-react";
 
 type Props = {
   goal: GoalSchema;
@@ -14,8 +14,11 @@ export const GoalCard = ({ goal }: Props) => {
         <CardTitle>{goal.title}</CardTitle>
         <CardDescription>{goal.description}</CardDescription>
         <CardAction>
-          <Link to={`/panel/goals/${goal.id}`}> 
+          <Link to={`/panel/goals/${goal.id}`}>
             <EyeIcon className="size-4" /> Ver
+          </Link>
+          <Link to={`/panel/goals/edit/${goal.id}`}>
+            <Edit2Icon className="size-4" /> Editar
           </Link>
         </CardAction>
       </CardHeader>
