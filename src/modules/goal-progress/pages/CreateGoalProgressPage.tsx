@@ -9,12 +9,12 @@ import { Loader2Icon, PlusIcon } from "lucide-react"
 export const CreateGoalProgressPage = () => {
 
   const { goalId } = useParams()
-  const { form, createGoalProgressMutation } = useCreateGoalProgress(goalId ?? "")
+  const { form, createGoalProgressMutation, showProgress } = useCreateGoalProgress(goalId ?? "")
   return (
     <div>
       <form onSubmit={form.handleSubmit((data) => createGoalProgressMutation.mutate(data))}>
         <FieldGroup>
-        <Controller
+          <Controller
             name="goalId"
             control={form.control}
             render={({ field, fieldState }) => (
@@ -36,7 +36,7 @@ export const CreateGoalProgressPage = () => {
               </Field>
             )}
           />
-          <Controller
+          {showProgress && <Controller
             name="progress"
             control={form.control}
             render={({ field, fieldState }) => (
@@ -59,7 +59,7 @@ export const CreateGoalProgressPage = () => {
                 )}
               </Field>
             )}
-          />
+          />}
           <Button type="submit" disabled={createGoalProgressMutation.isPending}>
             {createGoalProgressMutation.isPending ? (
               <>

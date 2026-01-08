@@ -10,6 +10,7 @@ export const goalSchema = z.object({
   title: z.string().min(1, "Título requerido"),
   goalType: goalTypes,
   target: z.number().nullish(),
+  currentProgress: z.number().nullish(),
   description: z.string().min(1, "Descripción requerida"),
   completedAt: z.date().nullish(),
   createdAt: z.date(),
