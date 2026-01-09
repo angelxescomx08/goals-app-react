@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useNavigate } from "react-router"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
-import { KEY_GOALS } from "./useInfiniteGoalsByUser"
+import { useInfiniteGoalsByUser } from "./useInfiniteGoalsByUser"
 import { KEY_STATISTICS } from "./useStatistics"
 import { KEY_GOALS_WITH_TYPE_GOAL, useGoalsWithTypeGoal } from "./useGoalsWithTypeGoal"
 
@@ -18,6 +18,7 @@ export const useEditGoal = (id: string) => {
   const navigate = useNavigate()
   const { goal } = useGoalById(id)
   const { goals: goalsWithTypeGoal } = useGoalsWithTypeGoal()
+  const { goals } = useInfiniteGoalsByUser()
 
   const form = useForm<CreateGoalSchema>({
     resolver: zodResolver(createGoalSchema),
@@ -63,10 +64,7 @@ export const useEditGoal = (id: string) => {
   const editGoalMutation = useMutation({
     mutationFn: createGoal,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [KEY_GOALS],
-        exact: false,
-      })
+      await goals.refetch()
 
       await queryClient.invalidateQueries({
         queryKey: [KEY_STATISTICS],

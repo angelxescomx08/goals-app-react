@@ -161,7 +161,9 @@ export const CreateGoalPage = () => {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid} className="grid gap-2">
-                    <FieldLabel className="text-sm font-semibold text-slate-700">Descripción (Opcional)</FieldLabel>
+                    <FieldLabel className="text-sm font-semibold text-slate-700">
+                      Descripción
+                    </FieldLabel>
                     <Textarea
                       {...field}
                       value={field.value ?? ""}
