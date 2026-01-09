@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { type GoalSchema } from "@/modules/goals/schemas/goalSchema"
 import { Link } from "react-router";
 import { Edit2Icon, EyeIcon, Target, Calendar } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Props = {
   goal: GoalSchema;
@@ -19,8 +20,13 @@ export const GoalCard = ({ goal }: Props) => {
           </div>
           
           {/* Badge de estado (Simulado con estilos) */}
-          <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
-            En progreso
+          <span className={cn("text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full",
+            {
+              "bg-emerald-50 text-emerald-600": goal.completedAt,
+              "bg-red-50 text-amber-600": !goal.completedAt,
+            }
+          )}>
+            {goal.completedAt ? "Completada" : "En progreso"}
           </span>
         </div>
 
