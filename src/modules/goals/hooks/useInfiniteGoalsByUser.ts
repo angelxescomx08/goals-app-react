@@ -2,14 +2,14 @@ import { authClient } from "@/lib/auth"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { getGoalsByUser } from "../actions/goalsActions"
 
-export const KEY = "goals"
+export const KEY_GOALS = "goals"
 
 export const useInfiniteGoalsByUser = () => {
 
   const session = authClient.useSession()
 
   const goals = useInfiniteQuery({
-    queryKey: [KEY, {
+    queryKey: [KEY_GOALS, {
       userId: session.data?.user?.id
     }],
     queryFn: ({ pageParam = 1 }) => getGoalsByUser(pageParam, 10),

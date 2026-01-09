@@ -25,3 +25,9 @@ export async function getGoalById(id: string) {
 export async function getStatistics({ endDate, startDate }: { startDate: string, endDate: string }) {
   return api.get<StatisticsSchema>(`/goals/statistics?startDate=${startDate}&endDate=${endDate}`);
 }
+
+export async function toggleCompletion(id: string) {
+  return api.put<{
+    message: string
+  }>(`/goals/${id}/toggle-completion`)
+}

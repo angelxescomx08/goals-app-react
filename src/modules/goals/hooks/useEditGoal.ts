@@ -3,12 +3,12 @@ import { useForm } from "react-hook-form"
 import { createGoalSchema, type CreateGoalSchema } from "@/modules/goals/schemas/goalSchema"
 import { createGoal } from "../actions/goalsActions"
 import { useEffect, useState } from "react"
-import { KEY, useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
+import { useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useNavigate } from "react-router"
-import { authClient } from "@/lib/auth"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
+import { KEY_GOALS } from "./useInfiniteGoalsByUser"
 
 export const useEditGoal = (id: string) => {
 
@@ -16,7 +16,6 @@ export const useEditGoal = (id: string) => {
   const { units } = useUnitsByUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const session = authClient.useSession()
   const { goal } = useGoalById(id ?? "")
 
   const form = useForm<CreateGoalSchema>({
@@ -36,9 +35,10 @@ export const useEditGoal = (id: string) => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey:
-          [KEY, { userId: session.data?.user?.id }]
+          [KEY_GOALS],
+        exact: false
       })
-      toast.success("Meta creada correctamente")
+      toast.success("Meta actualizada correctamente")
       form.reset()
       navigate("/panel")
     },

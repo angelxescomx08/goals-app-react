@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { PlusIcon, ChevronLeft, Target, TrendingUp, Info } from "lucide-react"
+import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
 import { PieChartComponent } from "@/components/charts/PieChart"
@@ -44,13 +44,31 @@ export const GoalView = () => {
             </h1>
           </div>
 
-          <Button 
-            onClick={() => navigate(`/panel/goals/progress/${id}/create`)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95"
-          >
-            <PlusIcon className="w-5 h-5 mr-2" />
-            Registrar progreso
-          </Button>
+          <div className="flex items-center gap-2">
+            {
+              goal.data?.data.goalType === "manual" && (
+                goal.data?.data.completedAt ? (
+                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+                    <CheckCircleIcon className="w-5 h-5 mr-2" />
+                    Marcar como completada
+                  </Button>
+                ) : (
+                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+                    <CheckCircleIcon className="w-5 h-5 mr-2" />
+                    Marcar como completada
+                  </Button>
+                )
+              )
+            }
+            <Button 
+              onClick={() => navigate(`/panel/goals/progress/${id}/create`)}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95"
+            >
+              <PlusIcon className="w-5 h-5 mr-2" />
+              Registrar progreso
+            </Button>
+          </div>
+
         </div>
 
         {/* Layout Principal: Info + Gráfico */}

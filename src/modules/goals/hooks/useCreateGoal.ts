@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form"
 import { createGoalSchema, type CreateGoalSchema } from "../schemas/goalSchema"
 import { createGoal } from "../actions/goalsActions"
 import { useEffect, useState } from "react"
-import { KEY, useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
+import { useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useNavigate } from "react-router"
-import { authClient } from "@/lib/auth"
+import { KEY_GOALS } from "./useInfiniteGoalsByUser"
 
 export const useCreateGoal = () => {
 
@@ -15,7 +15,6 @@ export const useCreateGoal = () => {
   const { units } = useUnitsByUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const session = authClient.useSession()
 
   const form = useForm<CreateGoalSchema>({
     resolver: zodResolver(createGoalSchema),
@@ -34,7 +33,8 @@ export const useCreateGoal = () => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey:
-          [KEY, { userId: session.data?.user?.id }]
+          [KEY_GOALS],
+        exact: false
       })
       toast.success("Meta creada correctamente")
       form.reset()
