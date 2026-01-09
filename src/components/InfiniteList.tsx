@@ -6,15 +6,16 @@ type Props<T> = {
   skeleton: ReactNode;
   alertNoItems: ReactNode;
   isLoading: boolean;
+  className?: string;
 }
 
 export function InfiniteList<T>({ 
-  items, renderItem, skeleton, alertNoItems, isLoading 
+  items, renderItem, skeleton, alertNoItems, isLoading, className 
 }: Props<T>) {
   if (isLoading) return skeleton;
   if (items.length === 0) return alertNoItems;
   return (
-    <div>
+    <div className={className}>
       {items.map(renderItem)}
     </div>
   )

@@ -33,8 +33,9 @@ export const GoalsPage = () => {
       <div className="relative">
         <InfiniteList
           isLoading={goals.isFetching}
+          // PASAMOS LAS CLASES DEL GRID AQUÍ
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           
-          // Estilizamos el estado "No hay items" para que sea más amigable
           alertNoItems={
             <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-dashed border-slate-200 rounded-3xl text-center">
               <div className="bg-slate-50 p-4 rounded-full mb-4">
@@ -55,14 +56,12 @@ export const GoalsPage = () => {
 
           items={goals.data?.pages.flatMap(page => page.data.data) ?? []}
           
-          // Renderizamos las tarjetas en un Grid responsivo
+          // AHORA RENDERITEM SOLO DEVUELVE LA CARD
           renderItem={goal => (
-            <div key={goal.id} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-               <GoalCard goal={goal} />
-            </div>
+            <GoalCard key={goal.id} goal={goal} />
           )}
 
-          // Skeleton mejorado para que parezca una tarjeta real
+          // SKELETON
           skeleton={
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((n) => (
