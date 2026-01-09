@@ -54,7 +54,7 @@ export const CreateGoalPage = () => {
                 )}
               />
 
-              {/* Tipo de Meta */}
+              {/* Meta padre */}
               <Controller
                 name="parentGoalId"
                 control={form.control}

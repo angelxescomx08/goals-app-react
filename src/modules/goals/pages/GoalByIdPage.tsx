@@ -12,7 +12,9 @@ import { Link } from "react-router"
 
 export const GoalByIdPage = () => {
   const { id } = useParams()
-  const { form, editGoalMutation, showTargetAndUnit, units } = useEditGoal(id ?? "")
+  const { 
+    form, editGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal 
+  } = useEditGoal(id ?? "")
 
   return (
     <main className="min-h-[calc(100vh-4rem)] bg-slate-50/50 p-6 lg:p-10">
@@ -61,6 +63,29 @@ export const GoalByIdPage = () => {
                       placeholder="Mi meta de lectura"
                       autoComplete="off"
                     />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
+                  </Field>
+                )}
+              />
+
+              {/* Meta padre */}
+              <Controller
+                name="parentGoalId"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid} className="grid gap-2">
+                    <FieldLabel htmlFor="parentGoalId" className="text-sm font-semibold text-slate-700">Meta padre</FieldLabel>
+                    <Select onValueChange={field.onChange} value={field.value ?? "null"}>
+                      <SelectTrigger className="h-11 border-slate-200">
+                        <SelectValue placeholder="Selecciona una meta" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="null">Ninguna</SelectItem>
+                        {goalsWithTypeGoal.data?.data.map((goal) => (
+                          <SelectItem key={goal.id} value={goal.id}>{goal.title}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
                   </Field>
                 )}
