@@ -1,21 +1,21 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, useWatch } from "react-hook-form"
 import { createGoalSchema, type CreateGoalSchema } from "../schemas/goalSchema"
 import { createGoal } from "../actions/goalsActions"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useNavigate } from "react-router"
 import { KEY_GOALS } from "./useInfiniteGoalsByUser"
 import { KEY_STATISTICS } from "./useStatistics"
+import { KEY_GOALS_WITH_TYPE_GOAL, useGoalsWithTypeGoal } from "./useGoalsWithTypeGoal"
 
 export const useCreateGoal = () => {
-
-  const [showTargetAndUnit, setShowTargetAndUnit] = useState(false)
   const { units } = useUnitsByUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { goals: goalsWithTypeGoal } = useGoalsWithTypeGoal()
 
   const form = useForm<CreateGoalSchema>({
     resolver: zodResolver(createGoalSchema),
@@ -29,18 +29,38 @@ export const useCreateGoal = () => {
     },
   })
 
+  const goalType = useWatch({
+    control: form.control,
+    name: "goalType",
+  })
+
+  const showTargetAndUnit = goalType === "target"
+
+  useEffect(() => {
+    if (goalType !== "target") {
+      form.setValue("unitId", null, { shouldDirty: false })
+      form.setValue("target", 0, { shouldDirty: false })
+    }
+  }, [goalType, form])
+
   const createGoalMutation = useMutation({
     mutationFn: createGoal,
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey:
-          [KEY_GOALS],
-        exact: false
+        queryKey: [KEY_GOALS],
+        exact: false,
       })
+
       await queryClient.invalidateQueries({
         queryKey: [KEY_STATISTICS],
         exact: false,
       })
+
+      await queryClient.invalidateQueries({
+        queryKey: [KEY_GOALS_WITH_TYPE_GOAL],
+        exact: false,
+      })
+
       toast.success("Meta creada correctamente")
       form.reset()
       navigate("/panel")
@@ -50,21 +70,11 @@ export const useCreateGoal = () => {
     },
   })
 
-  useEffect(() => {
-    if (form.getValues("goalType") === "target") {
-      form.setValue("unitId", null)
-      form.setValue("target", 0)
-      setShowTargetAndUnit(true)
-    } else {
-      setShowTargetAndUnit(false)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.watch("goalType")])
-
   return {
     form,
     createGoalMutation,
     showTargetAndUnit,
     units,
+    goalsWithTypeGoal,
   }
 }

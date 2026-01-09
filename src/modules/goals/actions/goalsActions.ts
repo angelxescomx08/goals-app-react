@@ -31,3 +31,7 @@ export async function toggleCompletion(id: string) {
     message: string
   }>(`/goals/${id}/toggle-completion`)
 }
+
+export async function getGoalsWithTypeGoal() {
+  return api.get<GoalSchema[]>("/goals/with-type-goal")
+}
