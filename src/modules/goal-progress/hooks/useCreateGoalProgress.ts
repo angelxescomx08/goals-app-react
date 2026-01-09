@@ -6,11 +6,13 @@ import { toast } from "sonner"
 import { createGoalProgress } from "../actions/goalProgressActions"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
 import { useInfiniteGoalsByUser } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
+import { useDateRange } from "@/hooks/useDateRange"
 
 export const useCreateGoalProgress = (goalId: string) => {
 
+  const { endDate, startDate } = useDateRange("all")
   const { goal } = useGoalById(goalId)
-  const { goals } = useInfiniteGoalsByUser()
+  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
 
   const form = useForm<CreateGoalProgress>({
     resolver: zodResolver(createGoalProgressSchema),

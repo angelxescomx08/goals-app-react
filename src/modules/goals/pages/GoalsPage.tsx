@@ -3,9 +3,12 @@ import { Link } from "react-router"
 import { Plus, Target, LayoutGrid } from "lucide-react"
 import { InfiniteList } from "@/components/InfiniteList"
 import { GoalCard } from "../components/GoalCard"
+import { TabsDateRange } from "@/components/TabsDateRange"
+import { useDateRange } from "@/hooks/useDateRange"
 
 export const GoalsPage = () => {
-  const { goals } = useInfiniteGoalsByUser()
+  const { endDate, startDate, setRangeDate } = useDateRange()
+  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
 
   return (
     <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">
@@ -27,6 +30,10 @@ export const GoalsPage = () => {
           <Plus className="w-5 h-5" />
           <span>Crear nueva meta</span>
         </Link>
+      </div>
+
+      <div className="w-80">
+        <TabsDateRange setRangeDate={setRangeDate} />
       </div>
 
       {/* Contenedor de la Lista Infinita */}

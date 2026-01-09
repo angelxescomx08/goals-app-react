@@ -10,13 +10,15 @@ import { useNavigate } from "react-router"
 import { useInfiniteGoalsByUser } from "./useInfiniteGoalsByUser"
 import { KEY_STATISTICS } from "./useStatistics"
 import { KEY_GOALS_WITH_TYPE_GOAL, useGoalsWithTypeGoal } from "./useGoalsWithTypeGoal"
+import { useDateRange } from "@/hooks/useDateRange"
 
 export const useCreateGoal = () => {
+  const { endDate, startDate } = useDateRange("all")
   const { units } = useUnitsByUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { goals: goalsWithTypeGoal } = useGoalsWithTypeGoal()
-  const { goals } = useInfiniteGoalsByUser()
+  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
 
   const form = useForm<CreateGoalSchema>({
     resolver: zodResolver(createGoalSchema),

@@ -11,14 +11,16 @@ import { useGoalById } from "@/modules/goals/hooks/useGoalById"
 import { useInfiniteGoalsByUser } from "./useInfiniteGoalsByUser"
 import { KEY_STATISTICS } from "./useStatistics"
 import { KEY_GOALS_WITH_TYPE_GOAL, useGoalsWithTypeGoal } from "./useGoalsWithTypeGoal"
+import { useDateRange } from "@/hooks/useDateRange"
 
 export const useEditGoal = (id: string) => {
+  const { endDate, startDate } = useDateRange("all")
   const { units } = useUnitsByUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { goal } = useGoalById(id)
   const { goals: goalsWithTypeGoal } = useGoalsWithTypeGoal()
-  const { goals } = useInfiniteGoalsByUser()
+  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
 
   const form = useForm<CreateGoalSchema>({
     resolver: zodResolver(createGoalSchema),

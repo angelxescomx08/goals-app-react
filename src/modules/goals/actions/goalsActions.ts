@@ -3,11 +3,15 @@ import { type CreateGoalSchema, type GoalSchema, type StatisticsSchema } from "@
 import type { UnitSchema } from "@/modules/units/schemas/unitSchema";
 import { type Pagination } from "@/types/pagination";
 
-export async function getGoalsByUser(page: number = 1, limit: number = 10) {
+export async function getGoalsByUser(
+  page: number = 1, limit: number = 10, endDate: string, startDate: string
+) {
   return api.get<Pagination<GoalSchema>>("/goals/by-user", {
     params: {
       page,
       limit,
+      endDate,
+      startDate,
     },
   })
 }

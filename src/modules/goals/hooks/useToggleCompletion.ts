@@ -3,10 +3,12 @@ import { toast } from "sonner"
 import { toggleCompletion } from "../actions/goalsActions"
 import { useInfiniteGoalsByUser } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
 import { KEY_STATISTICS } from "./useStatistics"
+import { useDateRange } from "@/hooks/useDateRange"
 
 export const useToggleCompletion = () => {
 
-  const { goals } = useInfiniteGoalsByUser()
+  const { endDate, startDate } = useDateRange("all")
+  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
   const queryClient = useQueryClient()
 
   const toggleCompletionMutation = useMutation({

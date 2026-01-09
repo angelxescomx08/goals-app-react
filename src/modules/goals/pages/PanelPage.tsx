@@ -1,12 +1,12 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useStatistics } from "../hooks/useStatistics"
 import { PieChartComponent } from "@/components/charts/PieChart"
-import { useState } from "react"
 import { CheckCircle2, Clock, Target } from "lucide-react" 
+import { TabsDateRange } from "@/components/TabsDateRange"
+import { useDateRange } from "@/hooks/useDateRange"
 
 export const PanelPage = () => {
-  const [rangeDate, setRangeDate] = useState<"week" | "month" | "year" | "all">("week")
-  const { statistics } = useStatistics({ rangeDate })
+  const { endDate, startDate, setRangeDate } = useDateRange()
+  const { statistics } = useStatistics({ endDate, startDate })
 
   return (
     <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">
@@ -18,19 +18,7 @@ export const PanelPage = () => {
           <p className="text-slate-500 mt-1">Monitorea tu progreso y cumplimiento de metas.</p>
         </div>
 
-        {/* Tabs Estilizados */}
-        <Tabs 
-          defaultValue="week" 
-          className="w-full md:w-auto" 
-          onValueChange={(value) => setRangeDate(value as "week" | "month" | "year" | "all")}
-        >
-          <TabsList className="grid w-full grid-cols-4 bg-slate-100 p-1 h-11 border border-slate-200 shadow-sm">
-            <TabsTrigger value="week" className="rounded-md data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm transition-all">Semana</TabsTrigger>
-            <TabsTrigger value="month" className="rounded-md data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm transition-all">Mes</TabsTrigger>
-            <TabsTrigger value="year" className="rounded-md data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm transition-all">Año</TabsTrigger>
-            <TabsTrigger value="all" className="rounded-md data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm transition-all">Todo</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <TabsDateRange setRangeDate={setRangeDate} />
       </div>
 
       {/* Grid de Tarjetas de Estadísticas (KPIs) */}
