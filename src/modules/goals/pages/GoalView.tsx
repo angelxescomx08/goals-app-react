@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button"
-import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon } from "lucide-react"
+import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
 import { PieChartComponent } from "@/components/charts/PieChart"
+import { useToggleCompletion } from "../hooks/useToggleCompletion"
 
 export const GoalView = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { goal } = useGoalById(id ?? "")
+  const { toggleCompletionMutation } = useToggleCompletion()
 
   // Extraemos datos para legibilidad (sin cambiar la lógica original)
   const goalData = goal.data?.data
@@ -48,14 +50,42 @@ export const GoalView = () => {
             {
               goal.data?.data.goalType === "manual" && (
                 goal.data?.data.completedAt ? (
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
-                    <CheckCircleIcon className="w-5 h-5 mr-2" />
-                    Marcar como completada
+                  <Button 
+                    disabled={toggleCompletionMutation.isPending}
+                    onClick={() => toggleCompletionMutation.mutate(id ?? "")}
+                  className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+                    {
+                      toggleCompletionMutation.isPending ? (
+                        <>
+                          <Loader2Icon className="w-5 h-5 animate-spin" />
+                          <span>Desmarcando como completada...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircleIcon className="w-5 h-5 mr-2" />
+                          <span>Desmarcar como completada</span>
+                        </>
+                      )
+                    }
                   </Button>
                 ) : (
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
-                    <CheckCircleIcon className="w-5 h-5 mr-2" />
-                    Marcar como completada
+                  <Button 
+                  
+                  disabled={toggleCompletionMutation.isPending}
+                  onClick={() => toggleCompletionMutation.mutate(id ?? "")} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+                    {
+                      toggleCompletionMutation.isPending ? (
+                        <>
+                          <Loader2Icon className="w-5 h-5 animate-spin" />
+                          <span>Marcando como completada...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircleIcon className="w-5 h-5 mr-2" />
+                          <span>Marcar como completada</span>
+                        </>
+                      )
+                    }
                   </Button>
                 )
               )
