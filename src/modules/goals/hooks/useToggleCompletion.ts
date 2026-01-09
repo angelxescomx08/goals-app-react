@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { toggleCompletion } from "../actions/goalsActions"
 import { KEY_GOALS, useInfiniteGoalsByUser } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
+import { KEY_STATISTICS } from "./useStatistics"
 
 export const useToggleCompletion = () => {
 
@@ -15,6 +16,10 @@ export const useToggleCompletion = () => {
         queryKey: [KEY_GOALS],
         exact: false,
         refetchType: "active",
+      })
+      await queryClient.invalidateQueries({
+        queryKey: [KEY_STATISTICS],
+        exact: false,
       })
       await goals.refetch()
       toast.success("Estado de la meta actualizado correctamente")

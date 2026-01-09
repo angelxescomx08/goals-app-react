@@ -9,6 +9,7 @@ import { toast } from "sonner"
 import { useNavigate } from "react-router"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
 import { KEY_GOALS } from "./useInfiniteGoalsByUser"
+import { KEY_STATISTICS } from "./useStatistics"
 
 export const useEditGoal = (id: string) => {
 
@@ -37,6 +38,10 @@ export const useEditGoal = (id: string) => {
         queryKey:
           [KEY_GOALS],
         exact: false
+      })
+      await queryClient.invalidateQueries({
+        queryKey: [KEY_STATISTICS],
+        exact: false,
       })
       toast.success("Meta actualizada correctamente")
       form.reset()
