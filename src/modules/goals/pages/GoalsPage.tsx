@@ -8,7 +8,7 @@ export const GoalsPage = () => {
   const { goals } = useInfiniteGoalsByUser()
 
   return (
-    <div className="space-y-8 p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">
       
       {/* Encabezado con Acción Principal */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-8">

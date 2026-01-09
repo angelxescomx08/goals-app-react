@@ -17,154 +17,151 @@ export const GoalView = () => {
 
   const progressPercentage =
     goalData?.target != null &&
-    goalData?.currentProgress != null &&
-    goalData.target > 0
+      goalData?.currentProgress != null &&
+      goalData.target > 0
       ? Math.min((goalData.currentProgress / goalData.target) * 100, 100)
       : 0
 
   const pendingPercentage = Math.max(100 - progressPercentage, 0)
 
   return (
-    <main className="min-h-screen bg-slate-50/50 p-6 lg:p-10">
-      <div className="max-w-6xl mx-auto space-y-8">
-        
-        {/* Navegación y Acciones Superiores */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <Link 
-              to="/panel/goals" 
-              className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors text-sm font-medium group mb-2"
-            >
-              <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-              Volver a metas
-            </Link>
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
-              <div className="p-2 bg-indigo-50 rounded-lg">
-                <Target className="w-6 h-6 text-indigo-600" />
-              </div>
-              {goalData?.title || "Detalle de Meta"}
-            </h1>
-          </div>
+    <div className="max-w-6xl mx-auto space-y-2 lg:space-y-8 min-h-screen bg-slate-50/50 p-0 md:p-6 lg:p-10">
+      {/* Navegación y Acciones Superiores */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <Link
+            to="/panel/goals"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-indigo-600 transition-colors text-sm font-medium group mb-2"
+          >
+            <ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Volver a metas
+          </Link>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-3">
+            <div className="p-2 bg-indigo-50 rounded-lg">
+              <Target className="w-6 h-6 text-indigo-600" />
+            </div>
+            {goalData?.title || "Detalle de Meta"}
+          </h1>
+        </div>
 
-          <div className="flex items-center gap-2">
-            {
-              goal.data?.data.goalType === "manual" && (
-                goal.data?.data.completedAt ? (
-                  <Button 
-                    disabled={toggleCompletionMutation.isPending}
-                    onClick={() => toggleCompletionMutation.mutate(id ?? "")}
+        <div className="flex items-center gap-2">
+          {
+            goal.data?.data.goalType === "manual" && (
+              goal.data?.data.completedAt ? (
+                <Button
+                  disabled={toggleCompletionMutation.isPending}
+                  onClick={() => toggleCompletionMutation.mutate(id ?? "")}
                   className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
-                    {
-                      toggleCompletionMutation.isPending ? (
-                        <>
-                          <Loader2Icon className="w-5 h-5 animate-spin" />
-                          <span>Desmarcando como completada...</span>
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircleIcon className="w-5 h-5 mr-2" />
-                          <span>Desmarcar como completada</span>
-                        </>
-                      )
-                    }
-                  </Button>
-                ) : (
-                  <Button 
-                  
+                  {
+                    toggleCompletionMutation.isPending ? (
+                      <>
+                        <Loader2Icon className="w-5 h-5 animate-spin" />
+                        <span>Desmarcando como completada...</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircleIcon className="w-5 h-5 mr-2" />
+                        <span>Desmarcar como completada</span>
+                      </>
+                    )
+                  }
+                </Button>
+              ) : (
+                <Button
+
                   disabled={toggleCompletionMutation.isPending}
                   onClick={() => toggleCompletionMutation.mutate(id ?? "")} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
-                    {
-                      toggleCompletionMutation.isPending ? (
-                        <>
-                          <Loader2Icon className="w-5 h-5 animate-spin" />
-                          <span>Marcando como completada...</span>
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircleIcon className="w-5 h-5 mr-2" />
-                          <span>Marcar como completada</span>
-                        </>
-                      )
-                    }
-                  </Button>
-                )
+                  {
+                    toggleCompletionMutation.isPending ? (
+                      <>
+                        <Loader2Icon className="w-5 h-5 animate-spin" />
+                        <span>Marcando como completada...</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircleIcon className="w-5 h-5 mr-2" />
+                        <span>Marcar como completada</span>
+                      </>
+                    )
+                  }
+                </Button>
               )
-            }
-            <Button 
-              onClick={() => navigate(`/panel/goals/progress/${id}/create`)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95"
-            >
-              <PlusIcon className="w-5 h-5 mr-2" />
-              Registrar progreso
-            </Button>
-          </div>
-
+            )
+          }
+          <Button
+            onClick={() => navigate(`/panel/goals/progress/${id}/create`)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95"
+          >
+            <PlusIcon className="w-5 h-5 mr-2" />
+            Registrar progreso
+          </Button>
         </div>
 
-        {/* Layout Principal: Info + Gráfico */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Columna Izquierda: Detalles e Información */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <Info className="w-4 h-4" /> Descripción
-              </h3>
-              <p className="text-slate-600 leading-relaxed italic">
-                {goalData?.description || "Esta meta no tiene una descripción detallada."}
+      </div>
+
+      {/* Layout Principal: Info + Gráfico */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        {/* Columna Izquierda: Detalles e Información */}
+        <div className="lg:col-span-1 space-y-6">
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+              <Info className="w-4 h-4" /> Descripción
+            </h3>
+            <p className="text-slate-600 leading-relaxed italic">
+              {goalData?.description || "Esta meta no tiene una descripción detallada."}
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500">Estado actual</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {goalData?.currentProgress || 0} / {goalData?.target || 0}
               </p>
             </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-500">Estado actual</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {goalData?.currentProgress || 0} / {goalData?.target || 0}
-                </p>
-              </div>
-              <div className="h-12 w-12 bg-emerald-50 rounded-full flex items-center justify-center">
-                <TrendingUp className="text-emerald-600 w-6 h-6" />
-              </div>
+            <div className="h-12 w-12 bg-emerald-50 rounded-full flex items-center justify-center">
+              <TrendingUp className="text-emerald-600 w-6 h-6" />
             </div>
           </div>
+        </div>
 
-          {/* Columna Derecha: Gráfico de Progreso */}
-          <div className="lg:col-span-2">
-            {isTargetType ? (
-              <PieChartComponent
-                title="Visualización de avance"
-                data={[
-                  {
-                    name: "Progreso actual",
-                    value: progressPercentage,
-                  },
-                  {
-                    name: "Progreso pendiente",
-                    value: pendingPercentage,
-                  },
-                ]}
-                config={{
-                  outerRadius: 110,
-                  showLegend: true,
-                  colors: ["#10b981", "#e2e8f0"], // Emerald para progreso, Slate suave para el resto
-                  isPercentage: true,
-                }}
-              />
-            ) : (
-              <div className="h-full min-h-[300px] flex flex-col items-center justify-center bg-white border border-dashed border-slate-200 rounded-2xl p-10 text-center">
-                <div className="bg-slate-50 p-4 rounded-full mb-4">
-                  <BarChart className="w-10 h-10 text-slate-300" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-800">Vista de meta manual</h3>
-                <p className="text-slate-500 max-w-[300px]">
-                  Esta meta es de tipo manual y no requiere visualización de objetivo numérico.
-                </p>
+        {/* Columna Derecha: Gráfico de Progreso */}
+        <div className="lg:col-span-2">
+          {isTargetType ? (
+            <PieChartComponent
+              title="Visualización de avance"
+              data={[
+                {
+                  name: "Progreso actual",
+                  value: progressPercentage,
+                },
+                {
+                  name: "Progreso pendiente",
+                  value: pendingPercentage,
+                },
+              ]}
+              config={{
+                outerRadius: 110,
+                showLegend: true,
+                colors: ["#10b981", "#e2e8f0"], // Emerald para progreso, Slate suave para el resto
+                isPercentage: true,
+              }}
+            />
+          ) : (
+            <div className="h-full min-h-[300px] flex flex-col items-center justify-center bg-white border border-dashed border-slate-200 rounded-2xl p-10 text-center">
+              <div className="bg-slate-50 p-4 rounded-full mb-4">
+                <BarChart className="w-10 h-10 text-slate-300" />
               </div>
-            )}
-          </div>
+              <h3 className="text-lg font-bold text-slate-800">Vista de meta manual</h3>
+              <p className="text-slate-500 max-w-[300px]">
+                Esta meta es de tipo manual y no requiere visualización de objetivo numérico.
+              </p>
+            </div>
+          )}
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 

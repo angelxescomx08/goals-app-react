@@ -9,7 +9,7 @@ export const PanelPage = () => {
   const { statistics } = useStatistics({ rangeDate })
 
   return (
-    <div className="space-y-8 p-6 lg:p-10 max-w-7xl mx-auto">
+    <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">
       
       {/* Cabecera del Panel */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -71,7 +71,7 @@ export const PanelPage = () => {
       </div>
 
       {/* Sección del Gráfico */}
-      <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="bg-white p-4 lg:p-8 rounded-2xl border border-slate-100 shadow-sm">
         <div className="mb-6">
           <h3 className="text-lg font-bold text-slate-900">Distribución de Progreso</h3>
           <p className="text-sm text-slate-500">Visualización porcentual de tus objetivos.</p>
