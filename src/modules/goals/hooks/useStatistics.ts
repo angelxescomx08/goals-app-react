@@ -4,7 +4,7 @@ import { authClient } from '@/lib/auth'
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
-export const KEY = "statistics";
+export const KEY_STATISTICS = "statistics";
 
 type Props = {
   rangeDate: "week" | "month" | "year" | "all"
@@ -19,20 +19,32 @@ export const useStatistics = ({ rangeDate }: Props) => {
     if (!createdAt) return dayjs().startOf("year").toISOString()
     switch (rangeDate) {
       case "week":
-        return [dayjs().subtract(7, "day").toISOString(), dayjs().toISOString()]
+        return [
+          dayjs().subtract(7, "day").format("YYYY-MM-DD"),
+          dayjs().format("YYYY-MM-DD"),
+        ]
       case "month":
-        return [dayjs().subtract(1, "month").toISOString(), dayjs().toISOString()]
+        return [
+          dayjs().subtract(1, "month").format("YYYY-MM-DD"),
+          dayjs().format("YYYY-MM-DD"),
+        ]
       case "year":
-        return [dayjs().subtract(1, "year").toISOString(), dayjs().toISOString()]
+        return [
+          dayjs().subtract(1, "year").format("YYYY-MM-DD"),
+          dayjs().format("YYYY-MM-DD"),
+        ]
       case "all":
-        return [createdAt.toISOString(), dayjs().toISOString()]
+        return [
+          dayjs(createdAt).format("YYYY-MM-DD"),
+          dayjs().format("YYYY-MM-DD"),
+        ]
     }
   }, [rangeDate, data?.user.createdAt])
 
   const session = authClient.useSession()
 
   const statistics = useQuery({
-    queryKey: [KEY, { userId: session.data?.user?.id, startDate, endDate }],
+    queryKey: [KEY_STATISTICS, { userId: session.data?.user?.id, startDate, endDate }],
     queryFn: () => getStatistics({ startDate, endDate }),
   })
 
