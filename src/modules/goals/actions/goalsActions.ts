@@ -45,3 +45,9 @@ export async function deleteGoal(id: string) {
     message: string
   }>(`/goals/${id}`)
 }
+
+export async function getGoalStatistics(id: string) {
+  return api.get<{
+    historicalData: { date: string, progress: number }[]
+  }>(`/goals/statistics/${id}`)
+}

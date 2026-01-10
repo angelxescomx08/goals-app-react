@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button"
-import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon } from "lucide-react"
+import { 
+  PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon 
+} from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
 import { PieChartComponent } from "@/components/charts/PieChart"
@@ -7,6 +9,8 @@ import { useToggleCompletion } from "../hooks/useToggleCompletion"
 import { DeleteButton } from "@/components/DeleteButton"
 import { useState } from "react"
 import { useDeteleGoal } from "../hooks/useDeteleGoal"
+import { useGoalStatistics } from "../hooks/useGoalStatistics"
+import { LineChartComponent } from "@/components/charts/LineChartComponent"
 
 export const GoalView = () => {
   const { id } = useParams()
@@ -15,9 +19,11 @@ export const GoalView = () => {
   const { toggleCompletionMutation } = useToggleCompletion()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const { deleteGoalMutation } = useDeteleGoal()
+  const { goalStatistics } = useGoalStatistics(id ?? "")
 
   const goalData = goal.data?.data
-  const isTargetType = goalData?.goalType === "target"
+  const showPieChartProgress = goalData?.goalType === "target" || goalData?.goalType === "goals"
+  const showLineChartProgress = goalData?.goalType === "target"
 
   const progressPercentage =
     goalData?.target != null &&
@@ -148,8 +154,8 @@ export const GoalView = () => {
         </div>
 
         {/* Columna Derecha: Gráfico de Progreso */}
-        <div className="lg:col-span-2">
-          {isTargetType ? (
+        <div className="lg:col-span-2 gap-4 flex flex-col">
+          {showPieChartProgress ? (
             <PieChartComponent
               title="Visualización de avance"
               data={[
@@ -170,7 +176,7 @@ export const GoalView = () => {
               }}
             />
           ) : (
-            <div className="h-full min-h-[300px] flex flex-col items-center justify-center bg-white border border-dashed border-slate-200 rounded-2xl p-10 text-center">
+            <div className="h-full min-h-[300px] flex flex-col items-center justify-center bg-white border-slate-200 rounded-2xl shadow-md p-10 text-center">
               <div className="bg-slate-50 p-4 rounded-full mb-4">
                 <BarChart className="w-10 h-10 text-slate-300" />
               </div>
@@ -180,6 +186,20 @@ export const GoalView = () => {
               </p>
             </div>
           )}
+
+          {
+            showLineChartProgress && (
+              <LineChartComponent
+                title="Progreso diario"
+                data={
+                  goalStatistics.data?.data.historicalData.map((item) => ({
+                    label: item.date,
+                    value: item.progress,
+                  })) ?? []
+                }
+              />
+            )
+          }
         </div>
       </div>
     </div>
