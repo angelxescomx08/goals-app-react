@@ -1,5 +1,11 @@
 import React from "react";
-import { Menu, Target, LayoutGrid, Settings, LogOut } from "lucide-react";
+import {
+  Menu,
+  Target,
+  LayoutGrid,
+  Settings,
+  LogOut,
+} from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -18,26 +24,35 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 
 export function MainHeader() {
-
   const { data: session } = authClient.useSession();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // 🔹 Control del sidebar
+  const [open, setOpen] = React.useState(false);
+
+  // 🔹 Cerrar sidebar al cambiar de ruta
+  React.useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4 md:px-8">
 
-        {/* LADO IZQUIERDO: Menú Móvil + Logo */}
+        {/* LADO IZQUIERDO */}
         <div className="flex items-center gap-4">
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">Abrir menú</span>
               </Button>
             </SheetTrigger>
+
             <SheetContent side="left" className="w-[300px] sm:w-[400px]">
               <SheetHeader>
                 <SheetTitle className="text-left flex items-center gap-2">
@@ -45,10 +60,23 @@ export function MainHeader() {
                   GoalTracker
                 </SheetTitle>
               </SheetHeader>
+
               <nav className="flex flex-col gap-4 mt-8">
-                <MobileNavLink href="/panel/goals" icon={<Target className="h-5 w-5" />} label="Mis Metas" />
-                <MobileNavLink href="/panel/units" icon={<LayoutGrid className="h-5 w-5" />} label="Unidades" />
-                <MobileNavLink href="/panel/settings" icon={<Settings className="h-5 w-5" />} label="Configuración" />
+                <MobileNavLink
+                  href="/panel/goals"
+                  icon={<Target className="h-5 w-5" />}
+                  label="Mis Metas"
+                />
+                <MobileNavLink
+                  href="/panel/units"
+                  icon={<LayoutGrid className="h-5 w-5" />}
+                  label="Unidades"
+                />
+                <MobileNavLink
+                  href="/panel/settings"
+                  icon={<Settings className="h-5 w-5" />}
+                  label="Configuración"
+                />
               </nav>
             </SheetContent>
           </Sheet>
@@ -58,39 +86,63 @@ export function MainHeader() {
             <span className="font-bold text-xl tracking-tight">GoalTracker</span>
           </Link>
 
-          {/* Nav para Desktop (Hidden en mobile) */}
+          {/* NAV DESKTOP */}
           <nav className="hidden md:flex items-center gap-6 ml-6">
-            <Link to="/panel/goals" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Metas</Link>
-            <Link to="/panel/units" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Unidades</Link>
+            <Link
+              to="/panel/goals"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Metas
+            </Link>
+            <Link
+              to="/panel/units"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Unidades
+            </Link>
           </nav>
         </div>
 
-        {/* LADO DERECHO: Notificaciones + Perfil */}
+        {/* LADO DERECHO */}
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                 <Avatar className="h-10 w-10 border">
-                  <AvatarImage src={session?.user?.image ?? undefined} alt={session?.user?.name ?? undefined} />
-                  <AvatarFallback>{session?.user?.name?.charAt(0)}</AvatarFallback>
+                  <AvatarImage
+                    src={session?.user?.image ?? undefined}
+                    alt={session?.user?.name ?? undefined}
+                  />
+                  <AvatarFallback>
+                    {session?.user?.name?.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{session?.user?.name ?? undefined}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{session?.user?.email ?? undefined}</p>
+                  <p className="text-sm font-medium leading-none">
+                    {session?.user?.name ?? ""}
+                  </p>
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {session?.user?.email ?? ""}
+                  </p>
                 </div>
               </DropdownMenuLabel>
+
               <DropdownMenuSeparator />
+
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Perfil</span>
               </DropdownMenuItem>
+
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                className="text-destructive focus:bg-destructive/10" 
+
+              <DropdownMenuItem
+                className="text-destructive focus:bg-destructive/10"
                 onClick={async () => {
                   await authClient.signOut({
                     fetchOptions: {
@@ -99,7 +151,8 @@ export function MainHeader() {
                       },
                     },
                   });
-                }}>
+                }}
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Cerrar Sesión</span>
               </DropdownMenuItem>
@@ -111,7 +164,15 @@ export function MainHeader() {
   );
 }
 
-function MobileNavLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+function MobileNavLink({
+  href,
+  icon,
+  label,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+}) {
   return (
     <Link
       to={href}
