@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button"
-import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, TrashIcon, PencilIcon } from "lucide-react"
+import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
 import { PieChartComponent } from "@/components/charts/PieChart"
 import { useToggleCompletion } from "../hooks/useToggleCompletion"
+import { DeleteButton } from "@/components/DeleteButton"
+import { useState } from "react"
+import { useDeteleGoal } from "../hooks/useDeteleGoal"
 
 export const GoalView = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { goal } = useGoalById(id ?? "")
   const { toggleCompletionMutation } = useToggleCompletion()
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const { deleteGoalMutation } = useDeteleGoal()
 
   const goalData = goal.data?.data
   const isTargetType = goalData?.goalType === "target"
@@ -42,9 +47,6 @@ export const GoalView = () => {
             {goalData?.title || "Detalle de Meta"}
           </h1>
         </div>
-
-
-
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
@@ -99,10 +101,19 @@ export const GoalView = () => {
           Registrar progreso
         </Button>
 
-        <Button variant="destructive" className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
-          <TrashIcon className="w-5 h-5 mr-2" />
-          Eliminar meta
-        </Button>
+        <DeleteButton 
+          title="Eliminar meta" 
+          description="¿Estás seguro de querer eliminar esta meta?" 
+          open={openDeleteModal} 
+          onOpenChange={setOpenDeleteModal} 
+          onDelete={async() => {
+            await deleteGoalMutation.mutateAsync(id ?? "")
+            setOpenDeleteModal(false)
+            navigate("/panel/goals")
+          }}
+          isLoading={deleteGoalMutation.isPending}
+        />
+        
         <Button onClick={() => navigate(`/panel/goals/edit/${id}`)} variant="outline" className="bg-slate-600 hover:bg-slate-700 text-white hover:text-white shadow-lg shadow-slate-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
           <PencilIcon className="w-5 h-5 mr-2" />
           Editar meta

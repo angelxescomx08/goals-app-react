@@ -39,3 +39,9 @@ export async function toggleCompletion(id: string) {
 export async function getGoalsWithTypeGoal() {
   return api.get<GoalSchema[]>("/goals/with-type-goal")
 }
+
+export async function deleteGoal(id: string) {
+  return api.delete<{
+    message: string
+  }>(`/goals/${id}`)
+}
