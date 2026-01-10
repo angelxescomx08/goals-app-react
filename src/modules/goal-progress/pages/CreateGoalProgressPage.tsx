@@ -11,7 +11,7 @@ export const CreateGoalProgressPage = () => {
   const { form, createGoalProgressMutation, showProgress } = useCreateGoalProgress(goalId ?? "")
 
   return (
-    <div className="w-full max-w-lg min-h-[calc(100vh-4rem)] bg-slate-50/50 p-0 md:p-6 lg:p-10 flex flex-col items-center">
+    <div className="w-full max-w-lg min-h-[calc(100vh-4rem)] bg-slate-50/50 p-0 md:p-6 lg:p-10 flex flex-col items-center mx-auto">
 
       {/* Navegación de regreso */}
       <Link

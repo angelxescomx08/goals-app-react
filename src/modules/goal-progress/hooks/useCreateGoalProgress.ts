@@ -8,11 +8,13 @@ import { useGoalById } from "@/modules/goals/hooks/useGoalById"
 import { KEY_GOALS } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
 import { invalidateQueries } from "@/lib/invalidateQueries"
 import { KEY_STATISTICS } from "@/modules/goals/hooks/useStatistics"
+import { useNavigate } from "react-router"
 
 export const useCreateGoalProgress = (goalId: string) => {
 
   const { goal } = useGoalById(goalId)
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const form = useForm<CreateGoalProgress>({
     resolver: zodResolver(createGoalProgressSchema),
@@ -36,6 +38,7 @@ export const useCreateGoalProgress = (goalId: string) => {
       ])
 
       toast.success("Progreso registrado correctamente")
+      navigate(`/panel/goals/${goalId}`)
     },
     onError: (error) => {
       toast.error(error.message)
