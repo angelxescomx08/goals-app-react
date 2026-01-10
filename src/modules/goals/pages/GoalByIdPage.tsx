@@ -3,7 +3,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Controller } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CreateUnitDrawer } from "@/modules/units/components/CreateUnitDrawer"
+import { CreateUnit } from "@/modules/units/components/CreateUnitDrawer"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Edit2Icon, Loader2Icon, Target, NotebookPen, Ruler, ChevronLeft } from "lucide-react"
@@ -137,7 +137,7 @@ export const GoalByIdPage = () => {
                               ))}
                             </SelectContent>
                           </Select>
-                          <CreateUnitDrawer />
+                          <CreateUnit />
                         </div>
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
                       </Field>

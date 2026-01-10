@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Loader2Icon, PlusIcon, Target, NotebookPen, Ruler } from "lucide-react"
-import { CreateUnitDrawer } from "@/modules/units/components/CreateUnitDrawer"
+import { CreateUnit } from "@/modules/units/components/CreateUnitDrawer"
 
 export const CreateGoalPage = () => {
   const { form, createGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal } = useCreateGoal()
@@ -122,7 +122,7 @@ export const CreateGoalPage = () => {
                               ))}
                             </SelectContent>
                           </Select>
-                          <CreateUnitDrawer />
+                          <CreateUnit />
                         </div>
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
                       </Field>

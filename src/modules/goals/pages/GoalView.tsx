@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon } from "lucide-react"
+import { PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, TrashIcon, PencilIcon } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
 import { PieChartComponent } from "@/components/charts/PieChart"
@@ -11,7 +11,6 @@ export const GoalView = () => {
   const { goal } = useGoalById(id ?? "")
   const { toggleCompletionMutation } = useToggleCompletion()
 
-  // Extraemos datos para legibilidad (sin cambiar la lógica original)
   const goalData = goal.data?.data
   const isTargetType = goalData?.goalType === "target"
 
@@ -44,59 +43,70 @@ export const GoalView = () => {
           </h1>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          {
-            goal.data?.data.goalType === "manual" && (
-              goal.data?.data.completedAt ? (
-                <Button
-                  disabled={toggleCompletionMutation.isPending}
-                  onClick={() => toggleCompletionMutation.mutate(id ?? "")}
-                  className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
-                  {
-                    toggleCompletionMutation.isPending ? (
-                      <>
-                        <Loader2Icon className="w-5 h-5 animate-spin" />
-                        <span>Desmarcando como completada...</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircleIcon className="w-5 h-5 mr-2" />
-                        <span>Desmarcar como completada</span>
-                      </>
-                    )
-                  }
-                </Button>
-              ) : (
-                <Button
 
-                  disabled={toggleCompletionMutation.isPending}
-                  onClick={() => toggleCompletionMutation.mutate(id ?? "")} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
-                  {
-                    toggleCompletionMutation.isPending ? (
-                      <>
-                        <Loader2Icon className="w-5 h-5 animate-spin" />
-                        <span>Marcando como completada...</span>
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircleIcon className="w-5 h-5 mr-2" />
-                        <span>Marcar como completada</span>
-                      </>
-                    )
-                  }
-                </Button>
-              )
+
+      </div>
+
+      <div className="flex items-center gap-2 flex-wrap">
+        {
+          goal.data?.data.goalType === "manual" && (
+            goal.data?.data.completedAt ? (
+              <Button
+                disabled={toggleCompletionMutation.isPending}
+                onClick={() => toggleCompletionMutation.mutate(id ?? "")}
+                className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+                {
+                  toggleCompletionMutation.isPending ? (
+                    <>
+                      <Loader2Icon className="w-5 h-5 animate-spin" />
+                      <span>Desmarcando como completada...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircleIcon className="w-5 h-5 mr-2" />
+                      <span>Desmarcar como completada</span>
+                    </>
+                  )
+                }
+              </Button>
+            ) : (
+              <Button
+
+                disabled={toggleCompletionMutation.isPending}
+                onClick={() => toggleCompletionMutation.mutate(id ?? "")} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+                {
+                  toggleCompletionMutation.isPending ? (
+                    <>
+                      <Loader2Icon className="w-5 h-5 animate-spin" />
+                      <span>Marcando como completada...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircleIcon className="w-5 h-5 mr-2" />
+                      <span>Marcar como completada</span>
+                    </>
+                  )
+                }
+              </Button>
             )
-          }
-          <Button
-            onClick={() => navigate(`/panel/goals/progress/${id}/create`)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95"
-          >
-            <PlusIcon className="w-5 h-5 mr-2" />
-            Registrar progreso
-          </Button>
-        </div>
+          )
+        }
+        <Button
+          onClick={() => navigate(`/panel/goals/progress/${id}/create`)}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95"
+        >
+          <PlusIcon className="w-5 h-5 mr-2" />
+          Registrar progreso
+        </Button>
 
+        <Button variant="destructive" className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+          <TrashIcon className="w-5 h-5 mr-2" />
+          Eliminar meta
+        </Button>
+        <Button onClick={() => navigate(`/panel/goals/edit/${id}`)} variant="outline" className="bg-slate-600 hover:bg-slate-700 text-white hover:text-white shadow-lg shadow-slate-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+          <PencilIcon className="w-5 h-5 mr-2" />
+          Editar meta
+        </Button>
       </div>
 
       {/* Layout Principal: Info + Gráfico */}
