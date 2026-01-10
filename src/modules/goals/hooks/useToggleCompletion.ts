@@ -1,24 +1,25 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { toggleCompletion } from "../actions/goalsActions"
-import { useInfiniteGoalsByUser } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
+import { KEY_GOALS } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
+import { invalidateQueries } from "@/lib/invalidateQueries"
 import { KEY_STATISTICS } from "./useStatistics"
-import { useDateRange } from "@/hooks/useDateRange"
 
 export const useToggleCompletion = () => {
 
-  const { endDate, startDate } = useDateRange("all")
-  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
   const queryClient = useQueryClient()
 
   const toggleCompletionMutation = useMutation({
     mutationFn: toggleCompletion,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [KEY_STATISTICS],
+      queryClient.refetchQueries({
+        queryKey: [KEY_GOALS],
         exact: false,
       })
-      await goals.refetch()
+      await invalidateQueries(queryClient, [
+        KEY_STATISTICS,
+        KEY_GOALS,
+      ])
       toast.success("Estado de la meta actualizado correctamente")
     },
     onError: (error) => {

@@ -42,8 +42,8 @@ export const useDateRange = (
 
     // 🔥 aquí se amplía el rango
     return [
-      start.subtract(1, "day").format("YYYY-MM-DD"),
-      end.add(1, "day").format("YYYY-MM-DD"),
+      start.subtract(2, "day").format("YYYY-MM-DD"),
+      end.add(2, "day").format("YYYY-MM-DD"),
     ];
   }, [rangeDate, data?.user.createdAt]);
 

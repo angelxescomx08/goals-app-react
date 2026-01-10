@@ -1,18 +1,18 @@
 import { useForm } from "react-hook-form"
 import { createGoalProgressSchema, type CreateGoalProgress } from "@/modules/goal-progress/schemas/goalProgressSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { createGoalProgress } from "../actions/goalProgressActions"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
-import { useInfiniteGoalsByUser } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
-import { useDateRange } from "@/hooks/useDateRange"
+import { KEY_GOALS } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
+import { invalidateQueries } from "@/lib/invalidateQueries"
+import { KEY_STATISTICS } from "@/modules/goals/hooks/useStatistics"
 
 export const useCreateGoalProgress = (goalId: string) => {
 
-  const { endDate, startDate } = useDateRange("all")
   const { goal } = useGoalById(goalId)
-  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
+  const queryClient = useQueryClient()
 
   const form = useForm<CreateGoalProgress>({
     resolver: zodResolver(createGoalProgressSchema),
@@ -25,7 +25,16 @@ export const useCreateGoalProgress = (goalId: string) => {
   const createGoalProgressMutation = useMutation({
     mutationFn: createGoalProgress,
     onSuccess: async () => {
-      await goals.refetch()
+      queryClient.removeQueries({
+        queryKey: [KEY_GOALS],
+        exact: false,
+      })
+
+      await invalidateQueries(queryClient, [
+        KEY_STATISTICS,
+        KEY_GOALS,
+      ])
+
       toast.success("Progreso registrado correctamente")
     },
     onError: (error) => {

@@ -8,19 +8,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useNavigate } from "react-router"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
-import { useInfiniteGoalsByUser } from "./useInfiniteGoalsByUser"
 import { KEY_STATISTICS } from "./useStatistics"
 import { KEY_GOALS_WITH_TYPE_GOAL, useGoalsWithTypeGoal } from "./useGoalsWithTypeGoal"
-import { useDateRange } from "@/hooks/useDateRange"
+import { KEY_GOALS } from "./useInfiniteGoalsByUser"
+import { invalidateQueries } from "@/lib/invalidateQueries"
 
 export const useEditGoal = (id: string) => {
-  const { endDate, startDate } = useDateRange("all")
   const { units } = useUnitsByUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { goal } = useGoalById(id)
   const { goals: goalsWithTypeGoal } = useGoalsWithTypeGoal()
-  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
 
   const form = useForm<CreateGoalSchema>({
     resolver: zodResolver(createGoalSchema),
@@ -66,17 +64,17 @@ export const useEditGoal = (id: string) => {
   const editGoalMutation = useMutation({
     mutationFn: createGoal,
     onSuccess: async () => {
-      await goals.refetch()
 
-      await queryClient.invalidateQueries({
-        queryKey: [KEY_STATISTICS],
+      queryClient.removeQueries({
+        queryKey: [KEY_GOALS],
         exact: false,
       })
 
-      await queryClient.invalidateQueries({
-        queryKey: [KEY_GOALS_WITH_TYPE_GOAL],
-        exact: false,
-      })
+      await invalidateQueries(queryClient, [
+        KEY_STATISTICS,
+        KEY_GOALS_WITH_TYPE_GOAL,
+        KEY_GOALS,
+      ])
 
       toast.success("Meta actualizada correctamente")
       form.reset()
