@@ -7,7 +7,7 @@ import { TabsDateRange } from "@/components/TabsDateRange"
 import { useDateRange } from "@/hooks/useDateRange"
 
 export const GoalsPage = () => {
-  const { endDate, startDate, setRangeDate } = useDateRange()
+  const { endDate, startDate, setRangeDate, rangeDate } = useDateRange("all")
   const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
 
   return (
@@ -33,7 +33,7 @@ export const GoalsPage = () => {
       </div>
 
       <div className="w-80">
-        <TabsDateRange setRangeDate={setRangeDate} />
+        <TabsDateRange rangeDate={rangeDate} setRangeDate={setRangeDate} />
       </div>
 
       {/* Contenedor de la Lista Infinita */}

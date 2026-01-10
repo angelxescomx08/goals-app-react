@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
 export const useDateRange = (
-  initialRangeDate: "week" | "month" | "year" | "all" = "week"
+  initialRangeDate: "week" | "month" | "year" | "all" = "year"
 ) => {
   const [rangeDate, setRangeDate] = useState<
     "week" | "month" | "year" | "all"

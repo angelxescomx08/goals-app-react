@@ -3,15 +3,16 @@ import { Tabs, TabsList, TabsTrigger } from "./ui/tabs"
 
 type Props = {
   setRangeDate: Dispatch<SetStateAction<"week" | "month" | "year" | "all">>
+  rangeDate: "week" | "month" | "year" | "all"
 }
 
-export const TabsDateRange = ({ setRangeDate }: Props) => {
+export const TabsDateRange = ({ setRangeDate, rangeDate }: Props) => {
   return (
     <>
       {/* Tabs Estilizados */}
       <Tabs
-        defaultValue="week"
         className="w-full md:w-auto"
+        value={rangeDate}
         onValueChange={(value) => setRangeDate(value as "week" | "month" | "year" | "all")}
       >
         <TabsList className="grid w-full grid-cols-4 bg-slate-100 p-1 h-11 border border-slate-200 shadow-sm">

@@ -5,7 +5,7 @@ import { TabsDateRange } from "@/components/TabsDateRange"
 import { useDateRange } from "@/hooks/useDateRange"
 
 export const PanelPage = () => {
-  const { endDate, startDate, setRangeDate } = useDateRange()
+  const { endDate, startDate, setRangeDate, rangeDate } = useDateRange("all")
   const { statistics } = useStatistics({ endDate, startDate })
 
   return (
@@ -18,7 +18,7 @@ export const PanelPage = () => {
           <p className="text-slate-500 mt-1">Monitorea tu progreso y cumplimiento de metas.</p>
         </div>
 
-        <TabsDateRange setRangeDate={setRangeDate} />
+        <TabsDateRange rangeDate={rangeDate} setRangeDate={setRangeDate} />
       </div>
 
       {/* Grid de Tarjetas de Estadísticas (KPIs) */}
