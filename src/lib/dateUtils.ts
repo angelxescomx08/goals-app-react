@@ -137,6 +137,17 @@ export function dayStringToEndUtc(dayString: string): string {
 }
 
 /**
+ * Convierte un string ISO UTC a string "YYYY-MM-DD" en hora local
+ * Útil para inicializar inputs de tipo date
+ */
+export function utcToDayString(utcString: string): string {
+  if (!utcString) return "";
+  
+  // Parsear como UTC y convertir a hora local, luego formatear como YYYY-MM-DD
+  return dayjs.utc(utcString).local().format("YYYY-MM-DD");
+}
+
+/**
  * Valida si un string es una fecha ISO válida
  */
 export function isValidISOString(dateString: string): boolean {
