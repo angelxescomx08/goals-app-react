@@ -23,7 +23,7 @@ export async function createGoal(data: CreateGoalSchema) {
 }
 
 export async function getGoalById(id: string) {
-  return api.get<GoalSchema & { units: UnitSchema } & { parentGoal?: GoalSchema }>(`/goals/${id}`)
+  return api.get<GoalSchema & { units: UnitSchema } & { parentGoal?: GoalSchema } & { children?: GoalSchema[] }>(`/goals/${id}`)
 }
 
 export async function getStatistics({ endDate, startDate }: { startDate: string, endDate: string }) {

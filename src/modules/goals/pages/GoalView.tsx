@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { 
-  PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon 
+  PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon, 
+  ArrowUp, GitBranch, ExternalLink
 } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
@@ -139,6 +140,83 @@ export const GoalView = () => {
               {goalData?.description || "Esta meta no tiene una descripción detallada."}
             </p>
           </div>
+
+          {/* Relaciones de Meta: Padre e Hijas */}
+          {(goalData?.parentGoal || (goalData?.children && goalData.children.length > 0)) && (
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <GitBranch className="w-4 h-4" /> Relaciones
+              </h3>
+
+              {/* Meta Padre */}
+              {goalData?.parentGoal && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <ArrowUp className="w-3.5 h-3.5" />
+                    Meta Padre
+                  </div>
+                  <Link
+                    to={`/panel/goals/${goalData.parentGoal.id}`}
+                    className="group flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all duration-200"
+                  >
+                    <div className="p-2 bg-white group-hover:bg-indigo-100 rounded-lg transition-colors">
+                      <Target className="w-4 h-4 text-slate-600 group-hover:text-indigo-600 transition-colors" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-slate-900 group-hover:text-indigo-900 truncate transition-colors">
+                        {goalData.parentGoal.title}
+                      </p>
+                      {goalData.parentGoal.description && (
+                        <p className="text-xs text-slate-500 group-hover:text-indigo-600 line-clamp-1 transition-colors">
+                          {goalData.parentGoal.description}
+                        </p>
+                      )}
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors shrink-0" />
+                  </Link>
+                </div>
+              )}
+
+              {/* Metas Hijas */}
+              {goalData?.children && goalData.children.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    <GitBranch className="w-3.5 h-3.5" />
+                    Submetas ({goalData.children.length})
+                  </div>
+                  <div className="max-h-[400px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
+                    {goalData.children.map((childGoal) => (
+                      <Link
+                        key={childGoal.id}
+                        to={`/panel/goals/${childGoal.id}`}
+                        className="group flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 transition-all duration-200"
+                      >
+                        <div className="p-2 bg-white group-hover:bg-emerald-100 rounded-lg transition-colors">
+                          <Target className="w-4 h-4 text-slate-600 group-hover:text-emerald-600 transition-colors" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-900 group-hover:text-emerald-900 truncate transition-colors">
+                            {childGoal.title}
+                          </p>
+                          {childGoal.description && (
+                            <p className="text-xs text-slate-500 group-hover:text-emerald-600 line-clamp-1 transition-colors">
+                              {childGoal.description}
+                            </p>
+                          )}
+                          {childGoal.completedAt && (
+                            <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">
+                              Completada
+                            </span>
+                          )}
+                        </div>
+                        <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition-colors shrink-0" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
             <div>
