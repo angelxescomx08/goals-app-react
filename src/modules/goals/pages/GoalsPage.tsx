@@ -7,8 +7,8 @@ import { TabsDateRange } from "@/components/TabsDateRange"
 import { useDateRange } from "@/hooks/useDateRange"
 
 export const GoalsPage = () => {
-  const { endDate, startDate, setRangeDate, rangeDate } = useDateRange("all")
-  const { goals } = useInfiniteGoalsByUser({ endDate, startDate })
+  const { endUtc, startUtc, setRangeDate, rangeDate } = useDateRange("all")
+  const { goals } = useInfiniteGoalsByUser({ endDate: endUtc, startDate: startUtc })
 
   return (
     <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">

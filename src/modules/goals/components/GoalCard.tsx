@@ -3,6 +3,7 @@ import { type GoalSchema } from "@/modules/goals/schemas/goalSchema"
 import { Link } from "react-router";
 import { Edit2Icon, EyeIcon, Target, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatLocalDate, formatRelativeTime } from "@/lib/dateUtils";
 
 type Props = {
   goal: GoalSchema;
@@ -44,8 +45,18 @@ export const GoalCard = ({ goal }: Props) => {
       <CardContent className="grow pb-6">
         <div className="flex items-center gap-2 text-slate-400 text-xs font-medium">
           <Calendar className="size-3.5" />
-          <span>Creado recientemente</span>
+          <span>
+            {goal.createdAt 
+              ? `Creado ${formatRelativeTime(goal.createdAt)}` 
+              : "Creado recientemente"}
+          </span>
         </div>
+        {goal.completedAt && (
+          <div className="flex items-center gap-2 text-slate-400 text-xs font-medium mt-2">
+            <Calendar className="size-3.5" />
+            <span>Completada {formatLocalDate(goal.completedAt)}</span>
+          </div>
+        )}
       </CardContent>
 
       {/* Footer con Acciones Estilizadas */}

@@ -1,4 +1,5 @@
 import { authClient } from "@/lib/auth";
+import { dayStringToStartUtc, dayStringToEndUtc } from "@/lib/dateUtils";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
@@ -40,16 +41,22 @@ export const useDateRange = (
         break;
     }
 
-    // 🔥 aquí se amplía el rango
+    // Strings "YYYY-MM-DD" para UI solamente
     return [
-      start.subtract(2, "day").format("YYYY-MM-DD"),
-      end.add(2, "day").format("YYYY-MM-DD"),
+      start.format("YYYY-MM-DD"),
+      end.format("YYYY-MM-DD"),
     ];
   }, [rangeDate, data?.user.createdAt]);
 
+  // Convertir fechas locales a UTC para enviar al backend
+  const startUtc = useMemo(() => dayStringToStartUtc(startDate), [startDate]);
+  const endUtc = useMemo(() => dayStringToEndUtc(endDate), [endDate]);
+
   return {
-    startDate,
-    endDate,
+    startDate, // Para UI: "YYYY-MM-DD"
+    endDate,   // Para UI: "YYYY-MM-DD"
+    startUtc,  // Para API: ISO 8601 UTC (inicio del día)
+    endUtc,    // Para API: ISO 8601 UTC (fin del día)
     rangeDate,
     setRangeDate,
   };
