@@ -11,15 +11,12 @@ import {
 } from "@/components/ui/dialog"
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Button } from "@/components/ui/button"
 
 interface ResponsiveModalProps {
   children: React.ReactNode
@@ -44,7 +41,7 @@ export function ResponsiveModal({
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] rounded-2xl border-slate-100 shadow-2xl p-8">
+        <DialogContent className="sm:max-w-[425px] rounded-2xl border-slate-100 shadow-2xl p-8 max-h-[70vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-slate-900 tracking-tight">
               {title}
@@ -76,14 +73,7 @@ export function ResponsiveModal({
             </DrawerDescription>
           )}
         </DrawerHeader>
-        <div className="px-2">{children}</div>
-        <DrawerFooter className="px-6 pt-2 pb-10">
-          <DrawerClose asChild>
-            <Button variant="ghost" className="text-slate-500 font-semibold hover:bg-slate-50">
-              Cancelar
-            </Button>
-          </DrawerClose>
-        </DrawerFooter>
+        <div className="px-2 overflow-y-auto pb-6">{children}</div>
       </DrawerContent>
     </Drawer>
   )

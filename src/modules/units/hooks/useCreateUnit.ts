@@ -17,6 +17,8 @@ export const useCreateUnit = () => {
     resolver: zodResolver(createUnitSchema),
     defaultValues: {
       name: "",
+      pluralName: "",
+      completedWord: "",
     },
   })
 
