@@ -5,6 +5,7 @@ import {
   LayoutGrid,
   Settings,
   LogOut,
+  BarChart3,
 } from "lucide-react";
 import {
   Sheet,
@@ -73,6 +74,11 @@ export function MainHeader() {
                   label="Unidades"
                 />
                 <MobileNavLink
+                  href="/panel/stats"
+                  icon={<BarChart3 className="h-5 w-5" />}
+                  label="Estadísticas"
+                />
+                <MobileNavLink
                   href="/panel/settings"
                   icon={<Settings className="h-5 w-5" />}
                   label="Configuración"
@@ -99,6 +105,12 @@ export function MainHeader() {
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               Unidades
+            </Link>
+            <Link
+              to="/panel/stats"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Estadísticas
             </Link>
           </nav>
         </div>
