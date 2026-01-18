@@ -27,6 +27,8 @@ export const useCreateGoal = () => {
       parentGoalId: null,
       target: 0,
       unitId: null,
+      unitIdCompleted: null,
+      unitCompletedAmount: null,
     },
   })
 

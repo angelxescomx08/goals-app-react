@@ -155,6 +155,64 @@ export const CreateGoalPage = () => {
               </div>
             )}
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-slate-50 rounded-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-300">
+              <p className="col-span-full">
+                Cuando completes la meta se agregará la unidad con la cantidad completada
+                a tus estadísticas (puedes no llenar este campo si no quieres que se agregue a tus estadísticas).
+              </p>
+              <div className="col-span-2 md:col-span-1 space-y-2">
+                <Controller
+                  name="unitIdCompleted"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="grid gap-2">
+                      <FieldLabel className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <Ruler className="w-4 h-4 text-slate-400" /> Unidad completada
+                      </FieldLabel>
+                      <div className="flex gap-2">
+                        <Select onValueChange={field.onChange} value={field.value ?? "null"}>
+                          <SelectTrigger className="h-11 bg-white border-slate-200 flex-1">
+                            <SelectValue placeholder="Unidad completada" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="null">Ninguna</SelectItem>
+                            {units.data?.data.units.map((unit) => (
+                              <SelectItem key={unit.id} value={unit.id}>{unit.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <CreateUnit />
+                      </div>
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
+                    </Field>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-2 md:col-span-1 space-y-2">
+                <Controller
+                  name="unitCompletedAmount"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="grid gap-2">
+                      <FieldLabel className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <Target className="w-4 h-4 text-slate-400" /> Cantidad completada
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        type="number"
+                        className="h-11 bg-white border-slate-200"
+                        value={field.value ? Number(field.value) : 0}
+                        onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                        placeholder="100"
+                      />
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
+                    </Field>
+                  )}
+                />
+              </div>
+            </div>
+
             {/* Descripción */}
             <Controller
               name="description"
