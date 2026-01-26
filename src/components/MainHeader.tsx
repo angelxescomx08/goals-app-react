@@ -6,6 +6,7 @@ import {
   Settings,
   LogOut,
   BarChart3,
+  MessageCircle,
 } from "lucide-react";
 import {
   Sheet,
@@ -83,6 +84,11 @@ export function MainHeader() {
                   icon={<Settings className="h-5 w-5" />}
                   label="Configuración"
                 />
+                <MobileNavLink
+                  href="/panel/chat"
+                  icon={<MessageCircle className="h-5 w-5" />}
+                  label="Chat"
+                />
               </nav>
             </SheetContent>
           </Sheet>
@@ -111,6 +117,12 @@ export function MainHeader() {
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               Estadísticas
+            </Link>
+            <Link
+              to="/panel/chat"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Chat
             </Link>
           </nav>
         </div>
