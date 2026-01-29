@@ -62,12 +62,6 @@ export const StatsDescriptivePage = () => {
   // Estado vacío
   const isEmpty = statsWithData.length === 0
 
-  // Calcular totales
-  const totalCurrentPeriod = statsWithData.reduce(
-    (sum, stat) => sum + stat.currentPeriod,
-    0
-  )
-
   // Preparar datos para gráfica de pastel (distribución por unidad)
   const pieChartData = statsWithData.map((stat) => ({
     name: stat.unit.name,
@@ -166,23 +160,6 @@ export const StatsDescriptivePage = () => {
                     )
                   })}
                 </div>
-
-                {/* Resumen total */}
-                {statsWithData.length > 1 && (
-                  <div className="bg-indigo-100 rounded-xl p-4 border border-indigo-200">
-                    <p className="text-lg text-indigo-900">
-                      <span className="font-semibold">Total:</span>{" "}
-                      <span className="font-bold text-xl">
-                        {totalCurrentPeriod.toLocaleString()}
-                      </span>{" "}
-                      <span className="text-indigo-700">
-                        {statsWithData.length === 1
-                          ? statsWithData[0].unit.pluralName
-                          : "actividades completadas"}
-                      </span>
-                    </p>
-                  </div>
-                )}
               </CardContent>
             </Card>
 
