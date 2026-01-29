@@ -1,14 +1,46 @@
-import { useInfiniteGoalsByUser } from "../hooks/useInfiniteGoalsByUser"
+import { useInfiniteGoalsByUser, type UseInfiniteGoalsByUserFilters } from "../hooks/useInfiniteGoalsByUser"
 import { Link } from "react-router"
-import { Plus, Target, LayoutGrid } from "lucide-react"
+import { Plus, Target, LayoutGrid, Search, GitBranch, CheckCircle2, Circle } from "lucide-react"
 import { InfiniteList } from "@/components/InfiniteList"
 import { GoalCard } from "../components/GoalCard"
 import { TabsDateRange } from "@/components/TabsDateRange"
 import { useDateRange } from "@/hooks/useDateRange"
+import { useState, useCallback } from "react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+type CompletedFilter = "all" | true | false
+type GoalTypeFilter = "all" | "target" | "manual" | "goals"
 
 export const GoalsPage = () => {
   const { endUtc, startUtc, setRangeDate, rangeDate } = useDateRange("all")
-  const { goals } = useInfiniteGoalsByUser({ endDate: endUtc, startDate: startUtc })
+  const [searchInput, setSearchInput] = useState("")
+  const [searchApplied, setSearchApplied] = useState("")
+  const [completedFilter, setCompletedFilter] = useState<CompletedFilter>("all")
+  const [goalTypeFilter, setGoalTypeFilter] = useState<GoalTypeFilter>("all")
+  const [excludeChildGoals, setExcludeChildGoals] = useState(false)
+
+  const filters: UseInfiniteGoalsByUserFilters = {
+    startDate: startUtc,
+    endDate: endUtc,
+    ...(searchApplied.trim() !== "" && { search: searchApplied.trim() }),
+    ...(completedFilter !== "all" && { completed: completedFilter }),
+    ...(goalTypeFilter !== "all" && { goalType: goalTypeFilter }),
+    ...(excludeChildGoals && { excludeChildGoals: true }),
+  }
+  const { goals } = useInfiniteGoalsByUser(filters)
+
+  const handleSearch = useCallback(() => {
+    setSearchApplied(searchInput)
+  }, [searchInput])
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") handleSearch()
+    },
+    [handleSearch]
+  )
 
   return (
     <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">
@@ -32,8 +64,92 @@ export const GoalsPage = () => {
         </Link>
       </div>
 
-      <div className="w-80">
-        <TabsDateRange rangeDate={rangeDate} setRangeDate={setRangeDate} />
+      {/* Panel de filtros */}
+      <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 sm:p-5 space-y-4">
+        {/* Fila 1: Rango de fechas + Buscador */}
+        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 lg:gap-6 lg:items-center">
+          <div className="w-full lg:w-auto lg:min-w-0">
+            <TabsDateRange rangeDate={rangeDate} setRangeDate={setRangeDate} />
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 min-w-0">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 shrink-0" />
+              <Input
+                placeholder="Buscar en título o descripción..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="pl-9 h-10 rounded-xl border-slate-200 w-full"
+              />
+            </div>
+            <Button onClick={handleSearch} variant="secondary" className="h-10 rounded-xl shrink-0">
+              <Search className="size-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Buscar</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Fila 2: Estado, Tipo, Solo raíz */}
+        <div className="flex flex-wrap gap-x-4 sm:gap-x-6 gap-y-3 pt-3 border-t border-slate-200/80">
+          <div className="flex flex-wrap gap-2 items-center min-w-0">
+            <span className="text-sm font-medium text-slate-600 shrink-0 w-14">Estado</span>
+            <div className="flex flex-wrap gap-1.5">
+              {([
+                { value: "all" as const, label: "Todas", icon: null },
+                { value: true as const, label: "Completadas", short: "Hechas", icon: CheckCircle2 },
+                { value: false as const, label: "Pendientes", short: "Pend.", icon: Circle },
+              ]).map(({ value, label, short: s, icon: Icon }) => (
+                <Button
+                  key={String(value)}
+                  type="button"
+                  variant={completedFilter === value ? "default" : "outline"}
+                  size="sm"
+                  className={cn("rounded-lg h-8", completedFilter === value && "bg-indigo-600 hover:bg-indigo-700")}
+                  onClick={() => setCompletedFilter(value)}
+                >
+                  {Icon && <Icon className="size-3.5 shrink-0" />}
+                  <span className="hidden sm:inline">{label}</span>
+                  <span className="sm:hidden">{s ?? label}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 items-center min-w-0">
+            <span className="text-sm font-medium text-slate-600 shrink-0 w-14">Tipo</span>
+            <div className="flex flex-wrap gap-1.5">
+              {([
+                { value: "all" as const, label: "Todos" },
+                { value: "target" as const, label: "Target" },
+                { value: "manual" as const, label: "Manual" },
+                { value: "goals" as const, label: "Contenedor" },
+              ]).map(({ value, label }) => (
+                <Button
+                  key={value}
+                  type="button"
+                  variant={goalTypeFilter === value ? "default" : "outline"}
+                  size="sm"
+                  className={cn("rounded-lg h-8", goalTypeFilter === value && "bg-indigo-600 hover:bg-indigo-700")}
+                  onClick={() => setGoalTypeFilter(value)}
+                >
+                  {label}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2 items-center">
+            <Button
+              type="button"
+              variant={excludeChildGoals ? "default" : "outline"}
+              size="sm"
+              className={cn("rounded-lg h-8", excludeChildGoals && "bg-indigo-600 hover:bg-indigo-700")}
+              onClick={() => setExcludeChildGoals((prev) => !prev)}
+            >
+              <GitBranch className="size-3.5" />
+              <span className="hidden md:inline">Solo metas raíz</span>
+              <span className="md:hidden">Raíz</span>
+            </Button>
+          </div>
+        </div>
       </div>
 
       {/* Contenedor de la Lista Infinita */}

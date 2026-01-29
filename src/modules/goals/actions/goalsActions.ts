@@ -3,17 +3,31 @@ import { type CreateGoalSchema, type GoalSchema, type StatisticsSchema } from "@
 import type { UnitSchema } from "@/modules/units/schemas/unitSchema";
 import { type Pagination } from "@/types/pagination";
 
-export async function getGoalsByUser(
-  page: number = 1, limit: number = 10, endDate: string, startDate: string
-) {
-  return api.get<Pagination<GoalSchema>>("/goals/by-user", {
-    params: {
-      page,
-      limit,
-      endDate,
-      startDate,
-    },
-  })
+export type GoalsByUserFilters = {
+  startDate: string;
+  endDate: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+  completed?: boolean;
+  goalType?: "target" | "manual" | "goals";
+  excludeChildGoals?: boolean;
+};
+
+export async function getGoalsByUser(filters: GoalsByUserFilters & { page: number }) {
+  const { startDate, endDate, page = 1, limit = 10, search, completed, goalType, excludeChildGoals } = filters;
+  const params: Record<string, string | number | boolean> = {
+    startDate,
+    endDate,
+    page,
+    limit,
+  };
+  if (search != null && search.trim() !== "") params.search = search.trim();
+  if (completed !== undefined) params.completed = completed;
+  if (goalType != null) params.goalType = goalType;
+  if (excludeChildGoals === true) params.excludeChildGoals = true;
+
+  return api.get<Pagination<GoalSchema>>("/goals/by-user", { params });
 }
 
 export async function createGoal(data: CreateGoalSchema) {
