@@ -156,10 +156,20 @@ export const GoalByIdPage = () => {
                         </FieldLabel>
                         <Input
                           {...field}
-                          type="number"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           className="h-11 bg-white border-slate-200"
-                          value={field.value ? Number(field.value) : 0}
-                          onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                          value={field.value === undefined || field.value === null ? "" : String(field.value)}
+                          onChange={(e) => {
+                            const v = e.target.value
+                            if (v === "") {
+                              field.onChange(undefined)
+                              return
+                            }
+                            const n = Number(v)
+                            if (!Number.isNaN(n) && n >= 0) field.onChange(n)
+                          }}
                           placeholder="100"
                         />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}

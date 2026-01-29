@@ -97,39 +97,38 @@ export const CreateGoalPage = () => {
               )}
             />
 
-            {/* Campos Condicionales: Unidad y Objetivo */}
-            {showTargetAndUnit && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-slate-50 rounded-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-300">
+            {/* Unidad (siempre visible) y Valor Objetivo (solo para Objetivo Numérico) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-slate-50 rounded-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-300">
+              <div className={showTargetAndUnit ? "col-span-2 md:col-span-1 space-y-2" : "col-span-full space-y-2"}>
+                <Controller
+                  name="unitId"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid} className="grid gap-2">
+                      <FieldLabel className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+                        <Ruler className="w-4 h-4 text-slate-400" /> Unidad
+                      </FieldLabel>
+                      <div className="flex gap-2">
+                        <Select onValueChange={field.onChange} value={field.value ?? "null"}>
+                          <SelectTrigger className="h-11 bg-white border-slate-200 flex-1">
+                            <SelectValue placeholder="Unidad" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="null">Ninguna</SelectItem>
+                            {units.data?.data.units.map((unit) => (
+                              <SelectItem key={unit.id} value={unit.id}>{unit.name}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <CreateUnit />
+                      </div>
+                      {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
+                    </Field>
+                  )}
+                />
+              </div>
 
-                <div className="col-span-2 md:col-span-1 space-y-2">
-                  <Controller
-                    name="unitId"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid} className="grid gap-2">
-                        <FieldLabel className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                          <Ruler className="w-4 h-4 text-slate-400" /> Unidad
-                        </FieldLabel>
-                        <div className="flex gap-2">
-                          <Select onValueChange={field.onChange} value={field.value ?? "null"}>
-                            <SelectTrigger className="h-11 bg-white border-slate-200 flex-1">
-                              <SelectValue placeholder="Unidad" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="null">Ninguna</SelectItem>
-                              {units.data?.data.units.map((unit) => (
-                                <SelectItem key={unit.id} value={unit.id}>{unit.name}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <CreateUnit />
-                        </div>
-                        {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
-                      </Field>
-                    )}
-                  />
-                </div>
-
+              {showTargetAndUnit && (
                 <div className="col-span-2 md:col-span-1 space-y-2">
                   <Controller
                     name="target"
@@ -141,10 +140,20 @@ export const CreateGoalPage = () => {
                         </FieldLabel>
                         <Input
                           {...field}
-                          type="number"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           className="h-11 bg-white border-slate-200"
-                          value={field.value ? Number(field.value) : 0}
-                          onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                          value={field.value === undefined || field.value === null ? "" : String(field.value)}
+                          onChange={(e) => {
+                            const v = e.target.value
+                            if (v === "") {
+                              field.onChange(undefined)
+                              return
+                            }
+                            const n = Number(v)
+                            if (!Number.isNaN(n) && n >= 0) field.onChange(n)
+                          }}
                           placeholder="100"
                         />
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}
@@ -152,8 +161,8 @@ export const CreateGoalPage = () => {
                     )}
                   />
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-slate-50 rounded-xl border border-slate-100 animate-in fade-in zoom-in-95 duration-300">
               <p className="col-span-full">
@@ -200,10 +209,20 @@ export const CreateGoalPage = () => {
                       </FieldLabel>
                       <Input
                         {...field}
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         className="h-11 bg-white border-slate-200"
-                        value={field.value ? Number(field.value) : 0}
-                        onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                        value={field.value === undefined || field.value === null ? "" : String(field.value)}
+                        onChange={(e) => {
+                          const v = e.target.value
+                          if (v === "") {
+                            field.onChange(undefined)
+                            return
+                          }
+                          const n = Number(v)
+                          if (!Number.isNaN(n) && n >= 0) field.onChange(n)
+                        }}
                         placeholder="100"
                       />
                       {fieldState.invalid && <FieldError errors={[fieldState.error]} className="text-xs text-red-500" />}

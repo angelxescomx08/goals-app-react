@@ -25,10 +25,10 @@ export const useCreateGoal = () => {
       description: "",
       goalType: "target",
       parentGoalId: null,
-      target: 0,
+      target: undefined,
       unitId: null,
       unitIdCompleted: null,
-      unitCompletedAmount: null,
+      unitCompletedAmount: undefined,
     },
   })
 
@@ -42,7 +42,7 @@ export const useCreateGoal = () => {
   useEffect(() => {
     if (goalType !== "target") {
       form.setValue("unitId", null, { shouldDirty: false })
-      form.setValue("target", 0, { shouldDirty: false })
+      form.setValue("target", undefined, { shouldDirty: false })
     }
   }, [goalType, form])
 

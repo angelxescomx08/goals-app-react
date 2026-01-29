@@ -57,7 +57,7 @@ export const useEditGoal = (id: string) => {
   useEffect(() => {
     if (goalType !== "target") {
       form.setValue("unitId", null, { shouldDirty: false })
-      form.setValue("target", 0, { shouldDirty: false })
+      form.setValue("target", undefined, { shouldDirty: false })
     }
   }, [goalType, form])
 

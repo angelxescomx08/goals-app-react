@@ -75,9 +75,19 @@ export const CreateGoalProgressPage = () => {
                     <div className="relative">
                       <Input
                         {...field}
-                        type="number"
-                        value={field.value ? Number(field.value) : 0}
-                        onChange={(e) => field.onChange(Number(e.target.value) || 0)}
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={field.value === undefined || field.value === null ? "" : String(field.value)}
+                        onChange={(e) => {
+                          const v = e.target.value
+                          if (v === "") {
+                            field.onChange(undefined)
+                            return
+                          }
+                          const n = Number(v)
+                          if (!Number.isNaN(n) && n >= 0) field.onChange(n)
+                        }}
                         id="progress"
                         className="h-14 text-xl font-bold pl-5 border-slate-200 focus-visible:ring-indigo-600 transition-all"
                         placeholder="0"

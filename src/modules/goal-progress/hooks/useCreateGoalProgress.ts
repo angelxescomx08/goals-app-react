@@ -20,7 +20,7 @@ export const useCreateGoalProgress = (goalId: string) => {
     resolver: zodResolver(createGoalProgressSchema),
     defaultValues: {
       goalId,
-      progress: 0,
+      progress: undefined,
     },
   })
 
