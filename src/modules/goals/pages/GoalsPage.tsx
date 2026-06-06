@@ -17,7 +17,7 @@ export const GoalsPage = () => {
   const { endUtc, startUtc, setRangeDate, rangeDate } = useDateRange("all")
   const [searchInput, setSearchInput] = useState("")
   const [searchApplied, setSearchApplied] = useState("")
-  const [completedFilter, setCompletedFilter] = useState<CompletedFilter>("all")
+  const [completedFilter, setCompletedFilter] = useState<CompletedFilter>(false)
   const [goalTypeFilter, setGoalTypeFilter] = useState<GoalTypeFilter>("all")
   const [excludeChildGoals, setExcludeChildGoals] = useState(false)
 
@@ -155,10 +155,11 @@ export const GoalsPage = () => {
       {/* Contenedor de la Lista Infinita */}
       <div className="relative">
         <InfiniteList
-          isLoading={goals.isFetching}
-          // PASAMOS LAS CLASES DEL GRID AQUÍ
+          isLoading={goals.isLoading}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          
+          fetchNextPage={goals.fetchNextPage}
+          hasNextPage={goals.hasNextPage}
+          isFetchingNextPage={goals.isFetchingNextPage}
           alertNoItems={
             <div className="flex flex-col items-center justify-center p-12 bg-white border-2 border-dashed border-slate-200 rounded-3xl text-center">
               <div className="bg-slate-50 p-4 rounded-full mb-4">
@@ -178,13 +179,9 @@ export const GoalsPage = () => {
           }
 
           items={goals.data?.pages.flatMap(page => page.data.data) ?? []}
-          
-          // AHORA RENDERITEM SOLO DEVUELVE LA CARD
           renderItem={goal => (
             <GoalCard key={goal.id} goal={goal} />
           )}
-
-          // SKELETON
           skeleton={
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((n) => (

@@ -26,7 +26,7 @@ export const useInfiniteGoalsByUser = (filters: UseInfiniteGoalsByUserFilters) =
         startDate,
         endDate,
         page: pageParam as number,
-        limit: 10,
+        limit: 2,
         ...(search != null && search.trim() !== "" && { search: search.trim() }),
         ...(completed !== undefined && { completed }),
         ...(goalType != null && { goalType }),
