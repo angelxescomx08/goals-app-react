@@ -14,5 +14,10 @@ export const createGoalProgressSchema = goalProgressSchema.omit({
   updatedAt: true,
 })
 
+export const updateGoalProgressSchema = z.object({
+  progress: z.number().positive("El valor debe ser mayor a 0"),
+})
+
 export type GoalProgress = z.infer<typeof goalProgressSchema>
 export type CreateGoalProgress = z.infer<typeof createGoalProgressSchema>
+export type UpdateGoalProgress = z.infer<typeof updateGoalProgressSchema>

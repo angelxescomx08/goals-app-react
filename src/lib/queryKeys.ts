@@ -24,4 +24,8 @@ export const queryKeys = {
     all: ["user-stats"] as const,
     byParams: (params: object) => ["user-stats", params],
   },
+  goalProgress: {
+    all: ["goal-progress"] as const,
+    list: (goalId: string) => ["goal-progress", "list", { goalId }],
+  },
 }

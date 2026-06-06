@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
-import { 
-  PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon, 
-  ArrowUp, GitBranch, ExternalLink
+import {
+  PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon,
+  ArrowUp, GitBranch, ExternalLink, ClipboardList,
 } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
@@ -124,6 +124,11 @@ export const GoalView = () => {
         <Button onClick={() => navigate(`/panel/goals/edit/${id}`)} variant="outline" className="bg-slate-600 hover:bg-slate-700 text-white hover:text-white shadow-lg shadow-slate-100 h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
           <PencilIcon className="w-5 h-5 mr-2" />
           Editar meta
+        </Button>
+
+        <Button onClick={() => navigate(`/panel/goals/progress/${id}`)} variant="outline" className="h-11 px-6 rounded-xl font-bold transition-all active:scale-95">
+          <ClipboardList className="w-5 h-5 mr-2" />
+          Ver historial
         </Button>
       </div>
 
