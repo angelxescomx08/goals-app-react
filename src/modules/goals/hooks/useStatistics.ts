@@ -1,21 +1,17 @@
-import { useQuery } from '@tanstack/react-query'
-import { getStatistics } from '../actions/goalsActions'
-
-export const KEY_STATISTICS = "statistics";
+import { useQuery } from "@tanstack/react-query"
+import { getStatistics } from "../actions/goalsActions"
+import { queryKeys } from "@/lib/queryKeys"
 
 type Props = {
-  endDate: string;
-  startDate: string;
+  endDate: string
+  startDate: string
 }
 
 export const useStatistics = ({ endDate, startDate }: Props) => {
-
   const statistics = useQuery({
-    queryKey: [KEY_STATISTICS, { startDate, endDate }],
+    queryKey: queryKeys.statistics.range(startDate, endDate),
     queryFn: () => getStatistics({ startDate, endDate }),
   })
 
-  return {
-    statistics,
-  }
+  return { statistics }
 }

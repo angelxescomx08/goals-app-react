@@ -5,13 +5,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { createGoalProgress } from "../actions/goalProgressActions"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
-import { KEY_GOALS } from "@/modules/goals/hooks/useInfiniteGoalsByUser"
-import { invalidateQueries } from "@/lib/invalidateQueries"
-import { KEY_STATISTICS } from "@/modules/goals/hooks/useStatistics"
+import { queryKeys } from "@/lib/queryKeys"
 import { useNavigate } from "react-router"
 
 export const useCreateGoalProgress = (goalId: string) => {
-
   const { goal } = useGoalById(goalId)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -27,16 +24,12 @@ export const useCreateGoalProgress = (goalId: string) => {
   const createGoalProgressMutation = useMutation({
     mutationFn: createGoalProgress,
     onSuccess: async () => {
-      queryClient.removeQueries({
-        queryKey: [KEY_GOALS],
-        exact: false,
-      })
-
-      await invalidateQueries(queryClient, [
-        KEY_STATISTICS,
-        KEY_GOALS,
+      queryClient.removeQueries({ queryKey: queryKeys.goals.lists() })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all }),
       ])
-
       toast.success("Progreso registrado correctamente")
       navigate(`/panel/goals/${goalId}`)
     },
@@ -45,8 +38,7 @@ export const useCreateGoalProgress = (goalId: string) => {
     },
   })
 
-  const showProgress =
-    !!goal.data?.data && goal.data.data.goalType === "target";
+  const showProgress = !!goal.data?.data && goal.data.data.goalType === "target"
 
   return {
     form,

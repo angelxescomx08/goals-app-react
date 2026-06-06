@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { getUnitStatistics } from "../actions/unitsAction"
-
-export const KEY_UNIT_STATISTICS = "unit-statistics"
+import { queryKeys } from "@/lib/queryKeys"
 
 type Props = {
   unitId: string
@@ -11,12 +10,10 @@ type Props = {
 
 export const useUnitStatistics = ({ unitId, startUtc, endUtc }: Props) => {
   const statistics = useQuery({
-    queryKey: [KEY_UNIT_STATISTICS, unitId, startUtc, endUtc],
+    queryKey: queryKeys.units.statistics(unitId, startUtc, endUtc),
     queryFn: () => getUnitStatistics(unitId, startUtc, endUtc),
     enabled: !!unitId && !!startUtc && !!endUtc,
   })
 
-  return {
-    statistics,
-  }
+  return { statistics }
 }

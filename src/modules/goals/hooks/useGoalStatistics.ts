@@ -1,18 +1,13 @@
 import { useQuery } from "@tanstack/react-query"
-import { KEY_GOALS } from "./useInfiniteGoalsByUser"
 import { getGoalStatistics } from "../actions/goalsActions"
+import { queryKeys } from "@/lib/queryKeys"
 
 export const useGoalStatistics = (id: string) => {
-
   const goalStatistics = useQuery({
-    queryKey: [KEY_GOALS, {
-      id,
-      statistics: true
-    }],
+    queryKey: queryKeys.goals.detailStatistics(id),
     queryFn: () => getGoalStatistics(id),
+    enabled: !!id,
   })
 
-  return {
-    goalStatistics,
-  }
+  return { goalStatistics }
 }

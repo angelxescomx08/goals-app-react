@@ -1,8 +1,7 @@
 import { authClient } from "@/lib/auth"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { getGoalsByUser, type GoalsByUserFilters } from "../actions/goalsActions"
-
-export const KEY_GOALS = "goals"
+import { queryKeys } from "@/lib/queryKeys"
 
 export type UseInfiniteGoalsByUserFilters = Pick<
   GoalsByUserFilters,
@@ -14,18 +13,14 @@ export const useInfiniteGoalsByUser = (filters: UseInfiniteGoalsByUserFilters) =
   const { startDate, endDate, search, completed, goalType, excludeChildGoals } = filters
 
   const goals = useInfiniteQuery({
-    queryKey: [
-      KEY_GOALS,
-      {
-        userId: session.data?.user?.id,
-        startDate,
-        endDate,
-        search: search ?? "",
-        completed,
-        goalType: goalType ?? "",
-        excludeChildGoals: !!excludeChildGoals,
-      },
-    ],
+    queryKey: queryKeys.goals.list(session.data?.user?.id, {
+      startDate,
+      endDate,
+      search: search ?? "",
+      completed,
+      goalType: goalType ?? "",
+      excludeChildGoals: !!excludeChildGoals,
+    }),
     queryFn: ({ pageParam = 1 }) =>
       getGoalsByUser({
         startDate,

@@ -5,11 +5,9 @@ import { createUnit } from "../actions/unitsAction"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useState } from "react"
-import { KEY_UNITS } from "./useUnitsByUser"
-import { invalidateQueries } from "@/lib/invalidateQueries"
+import { queryKeys } from "@/lib/queryKeys"
 
 export const useCreateUnit = () => {
-
   const [open, setOpen] = useState(false)
   const queryClient = useQueryClient()
 
@@ -25,7 +23,7 @@ export const useCreateUnit = () => {
   const createUnitMutation = useMutation({
     mutationFn: createUnit,
     onSuccess: async () => {
-      await invalidateQueries(queryClient, [KEY_UNITS])
+      await queryClient.invalidateQueries({ queryKey: queryKeys.units.all })
       toast.success("Unidad de medida creada correctamente")
       form.reset()
       setOpen(false)

@@ -7,10 +7,8 @@ import { useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { useNavigate } from "react-router"
-import { KEY_STATISTICS } from "./useStatistics"
-import { KEY_GOALS_WITH_TYPE_GOAL, useGoalsWithTypeGoal } from "./useGoalsWithTypeGoal"
-import { KEY_GOALS } from "./useInfiniteGoalsByUser"
-import { invalidateQueries } from "@/lib/invalidateQueries"
+import { useGoalsWithTypeGoal } from "./useGoalsWithTypeGoal"
+import { queryKeys } from "@/lib/queryKeys"
 
 export const useCreateGoal = () => {
   const { units } = useUnitsByUser()
@@ -32,11 +30,7 @@ export const useCreateGoal = () => {
     },
   })
 
-  const goalType = useWatch({
-    control: form.control,
-    name: "goalType",
-  })
-
+  const goalType = useWatch({ control: form.control, name: "goalType" })
   const showTargetAndUnit = goalType === "target"
 
   useEffect(() => {
@@ -49,17 +43,12 @@ export const useCreateGoal = () => {
   const createGoalMutation = useMutation({
     mutationFn: createGoal,
     onSuccess: async () => {
-      queryClient.removeQueries({
-        queryKey: [KEY_GOALS],
-        exact: false,
-      })
-
-      await invalidateQueries(queryClient, [
-        KEY_STATISTICS,
-        KEY_GOALS_WITH_TYPE_GOAL,
-        KEY_GOALS,
+      queryClient.removeQueries({ queryKey: queryKeys.goals.lists() })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all }),
       ])
-
       toast.success("Meta creada correctamente")
       form.reset()
       navigate("/panel")
