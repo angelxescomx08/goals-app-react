@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import { useUserStats } from "../hooks/useUserStats"
 import { useDateRange } from "@/hooks/useDateRange"
 import { TabsDateRange } from "@/components/TabsDateRange"
@@ -24,6 +25,40 @@ export const StatsDescriptivePage = () => {
     endDate: endUtc,
     type: rangeDate,
   })
+
+  const stats = useMemo(() => userStats.data?.data.stats ?? [], [userStats.data])
+
+  const statsWithData = useMemo(
+    () => stats.filter((stat) => stat.currentPeriod > 0),
+    [stats]
+  )
+
+  const isEmpty = statsWithData.length === 0
+
+  const pieChartData = useMemo(
+    () => statsWithData.map((stat) => ({ name: stat.unit.name, value: stat.currentPeriod })),
+    [statsWithData]
+  )
+
+  const comparisonData = useMemo(
+    () => stats
+      .filter((stat) => stat.currentPeriod > 0 || stat.lastPeriod > 0)
+      .map((stat) => ({ label: stat.unit.name, actual: stat.currentPeriod, anterior: stat.lastPeriod })),
+    [stats]
+  )
+
+  const topUnit = useMemo(
+    () => statsWithData.reduce(
+      (max, stat) => stat.currentPeriod > max.currentPeriod ? stat : max,
+      statsWithData[0] || { currentPeriod: 0, unit: { name: "", pluralName: "", completedWord: "" } }
+    ),
+    [statsWithData]
+  )
+
+  const improvedUnits = useMemo(
+    () => stats.filter((stat) => stat.percentage > 0 && stat.currentPeriod > 0),
+    [stats]
+  )
 
   // Estado de carga
   if (userStats.isLoading) {
@@ -53,41 +88,6 @@ export const StatsDescriptivePage = () => {
       </div>
     )
   }
-
-  const stats = userStats.data?.data.stats || []
-
-  // Filtrar estadísticas que tienen datos en el período actual
-  const statsWithData = stats.filter((stat) => stat.currentPeriod > 0)
-
-  // Estado vacío
-  const isEmpty = statsWithData.length === 0
-
-  // Preparar datos para gráfica de pastel (distribución por unidad)
-  const pieChartData = statsWithData.map((stat) => ({
-    name: stat.unit.name,
-    value: stat.currentPeriod,
-  }))
-
-  // Preparar datos para gráfica de barras (comparación de períodos)
-  const comparisonData = stats
-    .filter((stat) => stat.currentPeriod > 0 || stat.lastPeriod > 0)
-    .map((stat) => ({
-      label: stat.unit.name,
-      actual: stat.currentPeriod,
-      anterior: stat.lastPeriod,
-    }))
-
-  // Obtener la unidad con mayor progreso
-  const topUnit = statsWithData.reduce(
-    (max, stat) =>
-      stat.currentPeriod > max.currentPeriod ? stat : max,
-    statsWithData[0] || { currentPeriod: 0, unit: { name: "", pluralName: "", completedWord: "" } }
-  )
-
-  // Obtener unidades con mejor rendimiento (comparación)
-  const improvedUnits = stats.filter(
-    (stat) => stat.percentage > 0 && stat.currentPeriod > 0
-  )
 
   return (
     <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">

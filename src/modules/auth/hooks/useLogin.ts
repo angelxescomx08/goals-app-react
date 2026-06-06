@@ -1,9 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { flushSync } from "react-dom"
 import { useForm } from "react-hook-form"
 import { type LoginSchema, loginSchema } from "@/modules/auth/schemas/authSchema"
 import { authClient } from "@/lib/auth"
 
 export const useLogin = () => {
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -22,6 +25,7 @@ export const useLogin = () => {
   }
 
   const signInWithGoogle = async () => {
+    flushSync(() => setIsGoogleLoading(true))
     return await authClient.signIn.social({
       provider: "google",
       callbackURL: import.meta.env.VITE_URL_FRONTEND,
@@ -33,5 +37,6 @@ export const useLogin = () => {
     form,
     handleSubmit,
     signInWithGoogle,
+    isGoogleLoading,
   }
 }

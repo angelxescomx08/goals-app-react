@@ -4,9 +4,10 @@ import { useLogin } from "../hooks/useLogin"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router"
+import { Loader2 } from "lucide-react"
 
 export const LoginPage = () => {
-  const { form, handleSubmit, signInWithGoogle } = useLogin()
+  const { form, handleSubmit, signInWithGoogle, isGoogleLoading } = useLogin()
 
   return (
     // Contenedor principal: Centrado total y fondo suave
@@ -93,13 +94,17 @@ export const LoginPage = () => {
               </div>
             </div>
 
-            <Button 
-              type="button" 
+            <Button
+              type="button"
               variant="outline"
               onClick={signInWithGoogle}
+              disabled={isGoogleLoading}
               className="w-full h-11 border-slate-200 hover:bg-slate-50 flex items-center justify-center gap-3 transition-all"
             >
-              <img className="w-5 h-5" src="/google.webp" alt="Google" />
+              {isGoogleLoading
+                ? <Loader2 className="w-5 h-5 animate-spin" />
+                : <img className="w-5 h-5" src="/google.webp" alt="Google" />
+              }
               <span>Google</span>
             </Button>
           </div>

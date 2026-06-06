@@ -5,7 +5,7 @@ import { InfiniteList } from "@/components/InfiniteList"
 import { GoalCard } from "../components/GoalCard"
 import { TabsDateRange } from "@/components/TabsDateRange"
 import { useDateRange } from "@/hooks/useDateRange"
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -21,14 +21,14 @@ export const GoalsPage = () => {
   const [goalTypeFilter, setGoalTypeFilter] = useState<GoalTypeFilter>("all")
   const [excludeChildGoals, setExcludeChildGoals] = useState(false)
 
-  const filters: UseInfiniteGoalsByUserFilters = {
+  const filters: UseInfiniteGoalsByUserFilters = useMemo(() => ({
     startDate: startUtc,
     endDate: endUtc,
     ...(searchApplied.trim() !== "" && { search: searchApplied.trim() }),
     ...(completedFilter !== "all" && { completed: completedFilter }),
     ...(goalTypeFilter !== "all" && { goalType: goalTypeFilter }),
     ...(excludeChildGoals && { excludeChildGoals: true }),
-  }
+  }), [startUtc, endUtc, searchApplied, completedFilter, goalTypeFilter, excludeChildGoals])
   const { goals } = useInfiniteGoalsByUser(filters)
 
   const handleSearch = useCallback(() => {
