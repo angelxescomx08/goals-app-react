@@ -65,3 +65,22 @@ export async function getGoalStatistics(id: string) {
     historicalData: { date: string, progress: number }[]
   }>(`/goals/statistics/${id}`)
 }
+
+export type GoalProjection = {
+  target: number
+  currentProgress: number
+  remaining: number
+  averages: {
+    weekly: number
+    monthly: number
+    yearly: number
+  }
+  projection: {
+    daysLeft: number | null
+    estimatedDate: Date | null
+  }
+}
+
+export async function getGoalProjection(id: string) {
+  return api.get<GoalProjection>(`/goals/${id}/projection`)
+}

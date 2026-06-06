@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import {
   PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon,
-  ArrowUp, GitBranch, ExternalLink, ClipboardList,
+  ArrowUp, GitBranch, ExternalLink, ClipboardList, CalendarClock, Zap,
 } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
@@ -12,6 +12,8 @@ import { useState } from "react"
 import { useDeteleGoal } from "../hooks/useDeteleGoal"
 import { useGoalStatistics } from "../hooks/useGoalStatistics"
 import { LineChartComponent } from "@/components/charts/LineChartComponent"
+import { useGoalProjection } from "../hooks/useGoalProjection"
+import dayjs from "dayjs"
 
 export const GoalView = () => {
   const { id } = useParams()
@@ -21,6 +23,7 @@ export const GoalView = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const { deleteGoalMutation } = useDeteleGoal()
   const { goalStatistics } = useGoalStatistics(id ?? "")
+  const { goalProjection } = useGoalProjection(id ?? "")
 
   const goalData = goal.data?.data
   const showPieChartProgress = goalData?.goalType === "target" || goalData?.goalType === "goals"
@@ -236,7 +239,7 @@ export const GoalView = () => {
           </div>
         </div>
 
-        {/* Columna Derecha: Gráfico de Progreso */}
+        {/* Columna Derecha: Gráfico de Progreso + Proyección */}
         <div className="lg:col-span-2 gap-4 flex flex-col">
           {showPieChartProgress ? (
             <PieChartComponent
@@ -283,6 +286,80 @@ export const GoalView = () => {
               />
             )
           }
+
+          {/* Proyección */}
+          {goalData?.goalType === "target" && (
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-5 flex items-center gap-2">
+                <CalendarClock className="w-4 h-4" /> Proyección
+              </h3>
+
+              {goalProjection.isLoading ? (
+                <div className="flex justify-center py-6">
+                  <Loader2Icon className="w-6 h-6 animate-spin text-indigo-400" />
+                </div>
+              ) : goalProjection.isError ? (
+                <p className="text-sm text-slate-400 text-center py-4">No se pudo cargar la proyección.</p>
+              ) : goalProjection.data ? (() => {
+                const p = goalProjection.data.data
+                const { daysLeft, estimatedDate } = p.projection
+                return (
+                  <div className="space-y-5">
+                    {/* KPIs */}
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { label: "Objetivo", value: p.target },
+                        { label: "Progreso", value: p.currentProgress },
+                        { label: "Restante", value: p.remaining },
+                      ].map(({ label, value }) => (
+                        <div key={label} className="bg-slate-50 rounded-xl px-4 py-3 text-center">
+                          <p className="text-xs text-slate-500 font-medium mb-1">{label}</p>
+                          <p className="text-xl font-bold text-slate-900">{value.toLocaleString()}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tasas de avance */}
+                    <div>
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                        <Zap className="w-3.5 h-3.5" /> Ritmo de avance
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { label: "Semanal", value: p.averages.weekly },
+                          { label: "Mensual", value: p.averages.monthly },
+                          { label: "Anual", value: p.averages.yearly },
+                        ].map(({ label, value }) => (
+                          <div key={label} className="flex items-center justify-between bg-slate-50 rounded-xl px-4 py-2.5">
+                            <span className="text-sm text-slate-500">{label}</span>
+                            <span className="text-sm font-bold text-slate-800">{value.toLocaleString(undefined, { maximumFractionDigits: 1 })}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Fecha estimada */}
+                    <div className="bg-indigo-50 rounded-xl px-5 py-4 flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-0.5">Fecha estimada</p>
+                        <p className="text-lg font-bold text-indigo-900">
+                          {estimatedDate
+                            ? dayjs(estimatedDate).format("DD MMM YYYY")
+                            : "Sin datos suficientes"}
+                        </p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-0.5">Días restantes</p>
+                        <p className="text-lg font-bold text-indigo-900">
+                          {daysLeft === null ? "—" : daysLeft === 0 ? "Completado" : `${daysLeft} días`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })() : null}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ export const queryKeys = {
     details: () => ["goals", "detail"] as const,
     detail: (id: string) => ["goals", "detail", id] as const,
     detailStatistics: (id: string) => ["goals", "detail", id, "statistics"] as const,
+    projection: (id: string) => ["goals", "detail", id, "projection"] as const,
     withType: (userId: string | undefined) => ["goals", "with-type", { userId }],
   },
   units: {
