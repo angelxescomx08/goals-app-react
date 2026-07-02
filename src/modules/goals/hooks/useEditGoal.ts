@@ -80,5 +80,6 @@ export const useEditGoal = (id: string) => {
     units,
     goalsWithTypeGoal,
     handleGoalTypeChange,
+    goal,
   }
 }

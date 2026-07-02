@@ -8,12 +8,39 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Edit2Icon, Loader2Icon, Target, NotebookPen, Ruler, ChevronLeft } from "lucide-react"
 import { useEditGoal } from "@/modules/goals/hooks/useEditGoal"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Link } from "react-router"
+
+const GoalFormSkeleton = () => (
+  <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 md:p-8 lg:p-10 space-y-2 md:space-y-6">
+    {[1, 2, 3].map((n) => (
+      <div key={n} className="grid gap-2">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-11 w-full rounded-md" />
+      </div>
+    ))}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 bg-slate-50 rounded-xl border border-slate-100">
+      <div className="grid gap-2">
+        <Skeleton className="h-4 w-16" />
+        <Skeleton className="h-11 w-full rounded-md" />
+      </div>
+      <div className="grid gap-2">
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-11 w-full rounded-md" />
+      </div>
+    </div>
+    <div className="grid gap-2">
+      <Skeleton className="h-4 w-28" />
+      <Skeleton className="h-[120px] w-full rounded-md" />
+    </div>
+    <Skeleton className="h-12 w-full rounded-xl" />
+  </div>
+)
 
 export const GoalByIdPage = () => {
   const { id } = useParams()
   const {
-    form, editGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal, handleGoalTypeChange
+    form, editGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal, handleGoalTypeChange, goal
   } = useEditGoal(id ?? "")
 
   return (
@@ -42,6 +69,7 @@ export const GoalByIdPage = () => {
       </div>
 
       {/* Tarjeta del Formulario */}
+      {goal.isLoading ? <GoalFormSkeleton /> : (
       <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 md:p-8 lg:p-10">
         <form onSubmit={form.handleSubmit((data) => editGoalMutation.mutate(data))} className="space-y-2 md:space-y-6">
           <FieldGroup className="space-y-0 md:space-y-6">
@@ -230,6 +258,7 @@ export const GoalByIdPage = () => {
           </div>
         </form>
       </div>
+      )}
     </div>
   )
 }

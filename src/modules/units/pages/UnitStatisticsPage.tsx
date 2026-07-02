@@ -5,11 +5,12 @@ import { CumulativeProgressChart } from "../components/CumulativeProgressChart"
 import { ActivityChart } from "../components/ActivityChart"
 import { ProgressByGoalChart } from "../components/ProgressByGoalChart"
 import { useUnitsByUser } from "../hooks/useUnitsByUser"
-import { BarChart3, Loader2, AlertCircle } from "lucide-react"
+import { BarChart3, AlertCircle } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { useDateRange } from "@/hooks/useDateRange"
 import { TabsDateRange } from "@/components/TabsDateRange"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const UnitStatisticsPage = () => {
   const { unitId } = useParams<{ unitId: string }>()
@@ -46,10 +47,22 @@ export const UnitStatisticsPage = () => {
   if (statistics.isLoading || units.isLoading) {
     return (
       <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
-            <p className="text-slate-600">Cargando estadísticas...</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-64" />
+            <Skeleton className="h-4 w-80" />
+          </div>
+          <Skeleton className="h-10 w-56 rounded-xl" />
+        </div>
+
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Skeleton className="h-[320px] w-full rounded-2xl" />
+            <Skeleton className="h-[320px] w-full rounded-2xl" />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Skeleton className="h-[320px] w-full rounded-2xl" />
+            <Skeleton className="h-[320px] w-full rounded-2xl" />
           </div>
         </div>
       </div>

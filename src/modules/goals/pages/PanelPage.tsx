@@ -1,12 +1,13 @@
 import { useStatistics } from "../hooks/useStatistics"
 import { PieChartComponent } from "@/components/charts/PieChart"
-import { CheckCircle2, Clock, Target, BarChart3, Loader2, AlertCircle } from "lucide-react" 
+import { CheckCircle2, Clock, Target, BarChart3, AlertCircle } from "lucide-react"
 import { TabsDateRange } from "@/components/TabsDateRange"
 import { useDateRange } from "@/hooks/useDateRange"
 import { useUserStats } from "@/modules/stats/hooks/useUserStats"
 import { UnitStatCard } from "@/modules/stats/components/UnitStatCard"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const PanelPage = () => {
   const { endUtc, startUtc, setRangeDate, rangeDate } = useDateRange("all")
@@ -47,7 +48,11 @@ export const PanelPage = () => {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">Completadas</p>
-            <h2 className="text-3xl font-bold text-slate-900">{statistics.data?.data.totalCompletedGoals}</h2>
+            {statistics.isLoading ? (
+              <Skeleton className="h-9 w-14 mt-1" />
+            ) : (
+              <h2 className="text-3xl font-bold text-slate-900">{statistics.data?.data.totalCompletedGoals}</h2>
+            )}
           </div>
         </div>
 
@@ -58,7 +63,11 @@ export const PanelPage = () => {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">Pendientes</p>
-            <h2 className="text-3xl font-bold text-slate-900">{statistics.data?.data.pendingGoals}</h2>
+            {statistics.isLoading ? (
+              <Skeleton className="h-9 w-14 mt-1" />
+            ) : (
+              <h2 className="text-3xl font-bold text-slate-900">{statistics.data?.data.pendingGoals}</h2>
+            )}
           </div>
         </div>
 
@@ -69,7 +78,11 @@ export const PanelPage = () => {
           </div>
           <div>
             <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">Total Metas</p>
-            <h2 className="text-3xl font-bold text-slate-900">{statistics.data?.data.totalGoals}</h2>
+            {statistics.isLoading ? (
+              <Skeleton className="h-9 w-14 mt-1" />
+            ) : (
+              <h2 className="text-3xl font-bold text-slate-900">{statistics.data?.data.totalGoals}</h2>
+            )}
           </div>
         </div>
       </div>
@@ -118,11 +131,17 @@ export const PanelPage = () => {
 
         {/* Estados de carga y error para userStats */}
         {userStats.isLoading && (
-          <div className="flex items-center justify-center min-h-[200px]">
-            <div className="flex flex-col items-center gap-4">
-              <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
-              <p className="text-slate-600">Cargando estadísticas por unidad...</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-10 w-10 rounded-lg" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+                <Skeleton className="h-8 w-1/2" />
+                <Skeleton className="h-3 w-full" />
+              </div>
+            ))}
           </div>
         )}
 

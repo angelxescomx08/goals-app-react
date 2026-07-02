@@ -5,10 +5,25 @@ import { useCreateGoalProgress } from "../hooks/useCreateGoalProgress"
 import { useParams, Link } from "react-router"
 import { Button } from "@/components/ui/button"
 import { Loader2Icon, PlusIcon, ChevronLeft, TrendingUp, Hash } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton"
+
+const CreateGoalProgressFormSkeleton = () => (
+  <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-4 md:p-8 lg:p-10 w-full space-y-6">
+    <div className="grid gap-2">
+      <Skeleton className="h-4 w-32" />
+      <Skeleton className="h-11 w-full rounded-md" />
+    </div>
+    <div className="grid gap-2">
+      <Skeleton className="h-4 w-36" />
+      <Skeleton className="h-14 w-full rounded-md" />
+    </div>
+    <Skeleton className="h-12 w-full rounded-xl" />
+  </div>
+)
 
 export const CreateGoalProgressPage = () => {
   const { goalId } = useParams()
-  const { form, createGoalProgressMutation, showProgress, unit } = useCreateGoalProgress(goalId ?? "")
+  const { form, createGoalProgressMutation, showProgress, unit, goal } = useCreateGoalProgress(goalId ?? "")
 
   return (
     <div className="w-full max-w-lg min-h-[calc(100vh-4rem)] bg-slate-50/50 p-0 md:p-6 lg:p-10 flex flex-col items-center mx-auto">
@@ -36,6 +51,7 @@ export const CreateGoalProgressPage = () => {
       </div>
 
       {/* Tarjeta del Formulario */}
+      {goal.isLoading ? <CreateGoalProgressFormSkeleton /> : (
       <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-4 md:p-8 lg:p-10 w-full">
         <form onSubmit={form.handleSubmit((data) => createGoalProgressMutation.mutate(data))} className="space-y-6">
           <FieldGroup className="space-y-1 md:space-y-6">
@@ -127,6 +143,7 @@ export const CreateGoalProgressPage = () => {
           </div>
         </form>
       </div>
+      )}
     </div>
   )
 }

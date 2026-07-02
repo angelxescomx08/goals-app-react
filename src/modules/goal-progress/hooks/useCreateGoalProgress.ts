@@ -48,5 +48,6 @@ export const useCreateGoalProgress = (goalId: string) => {
     createGoalProgressMutation,
     showProgress,
     unit,
+    goal,
   }
 }

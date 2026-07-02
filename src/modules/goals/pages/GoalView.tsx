@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import {
   PlusIcon, ChevronLeft, Target, TrendingUp, Info, CheckCircleIcon, Loader2Icon, PencilIcon,
-  ArrowUp, GitBranch, ExternalLink, ClipboardList, CalendarClock, Zap,
+  ArrowUp, GitBranch, ExternalLink, ClipboardList, CalendarClock, Zap, Flame,
 } from "lucide-react"
 import { useNavigate, useParams, Link } from "react-router"
 import { useGoalById } from "../hooks/useGoalById"
@@ -13,7 +13,48 @@ import { useDeteleGoal } from "../hooks/useDeteleGoal"
 import { useGoalStatistics } from "../hooks/useGoalStatistics"
 import { LineChartComponent } from "@/components/charts/LineChartComponent"
 import { useGoalProjection } from "../hooks/useGoalProjection"
+import { useGoalStreak } from "../hooks/useGoalStreak"
+import { Skeleton } from "@/components/ui/skeleton"
 import dayjs from "dayjs"
+
+const GoalViewSkeleton = () => (
+  <div className="max-w-6xl mx-auto space-y-2 lg:space-y-8 min-h-screen bg-slate-50/50 p-0 md:p-6 lg:p-10">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="space-y-3">
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-9 w-64" />
+      </div>
+    </div>
+
+    <div className="flex items-center gap-2 flex-wrap">
+      <Skeleton className="h-11 w-44 rounded-xl" />
+      <Skeleton className="h-11 w-36 rounded-xl" />
+      <Skeleton className="h-11 w-32 rounded-xl" />
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="lg:col-span-1 space-y-6">
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-7 w-20" />
+          </div>
+          <Skeleton className="h-12 w-12 rounded-full" />
+        </div>
+      </div>
+
+      <div className="lg:col-span-2 gap-4 flex flex-col">
+        <Skeleton className="h-[380px] w-full rounded-2xl" />
+        <Skeleton className="h-[280px] w-full rounded-2xl" />
+      </div>
+    </div>
+  </div>
+)
 
 export const GoalView = () => {
   const { id } = useParams()
@@ -23,9 +64,10 @@ export const GoalView = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const { deleteGoalMutation } = useDeteleGoal()
   const { goalStatistics } = useGoalStatistics(id ?? "")
-  const { goalProjection } = useGoalProjection(id ?? "")
-
   const goalData = goal.data?.data
+  const { goalProjection } = useGoalProjection(id ?? "", goalData?.goalType === "target")
+  const { goalStreak } = useGoalStreak(id ?? "", goalData?.goalType === "manual")
+
   const showPieChartProgress = goalData?.goalType === "target" || goalData?.goalType === "goals"
   const showLineChartProgress = goalData?.goalType === "target"
 
@@ -37,6 +79,8 @@ export const GoalView = () => {
       : 0
 
   const pendingPercentage = Math.max(100 - progressPercentage, 0)
+
+  if (goal.isLoading) return <GoalViewSkeleton />
 
   return (
     <div className="max-w-6xl mx-auto space-y-2 lg:space-y-8 min-h-screen bg-slate-50/50 p-0 md:p-6 lg:p-10">
@@ -226,17 +270,19 @@ export const GoalView = () => {
             </div>
           )}
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-slate-500">Estado actual</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {goalData?.currentProgress || 0} / {goalData?.target || 0}
-              </p>
+          {goalData?.goalType !== "manual" && (
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-500">Estado actual</p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {goalData?.currentProgress || 0} / {goalData?.target || 0}
+                </p>
+              </div>
+              <div className="h-12 w-12 bg-emerald-50 rounded-full flex items-center justify-center">
+                <TrendingUp className="text-emerald-600 w-6 h-6" />
+              </div>
             </div>
-            <div className="h-12 w-12 bg-emerald-50 rounded-full flex items-center justify-center">
-              <TrendingUp className="text-emerald-600 w-6 h-6" />
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Columna Derecha: Gráfico de Progreso + Proyección */}
@@ -355,6 +401,63 @@ export const GoalView = () => {
                         </p>
                       </div>
                     </div>
+                  </div>
+                )
+              })() : null}
+            </div>
+          )}
+
+          {/* Racha de actividad (metas manuales) */}
+          {goalData?.goalType === "manual" && (
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-5 flex items-center gap-2">
+                <Flame className="w-4 h-4" /> Racha de actividad
+              </h3>
+
+              {goalStreak.isLoading ? (
+                <div className="flex justify-center py-6">
+                  <Loader2Icon className="w-6 h-6 animate-spin text-indigo-400" />
+                </div>
+              ) : goalStreak.isError ? (
+                <p className="text-sm text-slate-400 text-center py-4">No se pudo cargar la racha.</p>
+              ) : goalStreak.data ? (() => {
+                const s = goalStreak.data.data
+                const activity = s.dailyActivity
+
+                const filledActivity = (() => {
+                  if (activity.length === 0) return []
+                  const activityByDate = new Map(activity.map((a) => [a.date, a.count]))
+                  const start = dayjs(activity[0].date)
+                  const totalDaysInRange = dayjs(activity[activity.length - 1].date).diff(start, "day") + 1
+                  return Array.from({ length: totalDaysInRange }, (_, i) => {
+                    const date = start.add(i, "day").format("YYYY-MM-DD")
+                    return {
+                      label: dayjs(date).format("DD MMM"),
+                      value: activityByDate.get(date) ?? 0,
+                    }
+                  })
+                })()
+
+                return (
+                  <div className="space-y-5">
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { label: "Días totales", value: s.totalDays },
+                        { label: "Racha máxima", value: s.maxStreak },
+                        { label: "Racha promedio", value: s.averageStreak },
+                      ].map(({ label, value }) => (
+                        <div key={label} className="bg-slate-50 rounded-xl px-4 py-3 text-center">
+                          <p className="text-xs text-slate-500 font-medium mb-1">{label}</p>
+                          <p className="text-xl font-bold text-slate-900">{value.toLocaleString()}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <LineChartComponent
+                      title="Actividad diaria"
+                      data={filledActivity}
+                      config={{ strokeColor: "#f97316" }}
+                    />
                   </div>
                 )
               })() : null}

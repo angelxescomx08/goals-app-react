@@ -90,3 +90,14 @@ export type GoalProjection = {
 export async function getGoalProjection(id: string) {
   return api.get<GoalProjection>(`/goals/${id}/projection`)
 }
+
+export type GoalStreak = {
+  totalDays: number
+  maxStreak: number
+  averageStreak: number
+  dailyActivity: { date: string, count: number }[]
+}
+
+export async function getGoalStreak(id: string) {
+  return api.get<GoalStreak>(`/goals/${id}/streak`)
+}

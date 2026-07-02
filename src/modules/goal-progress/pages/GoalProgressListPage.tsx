@@ -12,6 +12,7 @@ import { useGoalById } from "@/modules/goals/hooks/useGoalById"
 import { DeleteButton } from "@/components/DeleteButton"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export const GoalProgressListPage = () => {
   const { goalId } = useParams()
@@ -91,8 +92,22 @@ export const GoalProgressListPage = () => {
 
       {/* Loading */}
       {goalProgress.isLoading && (
-        <div className="flex justify-center py-16">
-          <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+        <div className="space-y-3">
+          {[1, 2, 3, 4].map((n) => (
+            <div
+              key={n}
+              className="bg-white rounded-2xl border border-slate-100 shadow-sm px-5 py-4 flex items-center gap-4"
+            >
+              <div className="flex-1 min-w-0 space-y-2">
+                <Skeleton className="h-3.5 w-32" />
+                <Skeleton className="h-6 w-20" />
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <Skeleton className="h-9 w-9 rounded-md" />
+                <Skeleton className="h-9 w-9 rounded-md" />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

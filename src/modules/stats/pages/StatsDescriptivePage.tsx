@@ -2,9 +2,10 @@ import { useMemo } from "react"
 import { useUserStats } from "../hooks/useUserStats"
 import { useDateRange } from "@/hooks/useDateRange"
 import { TabsDateRange } from "@/components/TabsDateRange"
-import { Loader2, AlertCircle, BarChart3, TrendingUp, TrendingDown, Minus } from "lucide-react"
+import { AlertCircle, BarChart3, TrendingUp, TrendingDown, Minus } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { PieChartComponent } from "@/components/charts/PieChart"
 import {
   BarChart as RechartsBarChart,
@@ -64,11 +65,25 @@ export const StatsDescriptivePage = () => {
   if (userStats.isLoading) {
     return (
       <div className="space-y-8 p-0 md:p-6 lg:p-10 max-w-7xl mx-auto">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="flex flex-col items-center gap-4">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
-            <p className="text-slate-600">Cargando estadísticas...</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <Skeleton className="h-9 w-64" />
+            <Skeleton className="h-4 w-80" />
           </div>
+          <Skeleton className="h-10 w-56 rounded-xl" />
+        </div>
+
+        <Card className="border-slate-100 shadow-sm rounded-2xl bg-white">
+          <CardContent className="space-y-3 pt-6">
+            {[1, 2, 3].map((n) => (
+              <Skeleton key={n} className="h-14 w-full rounded-xl" />
+            ))}
+          </CardContent>
+        </Card>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Skeleton className="h-[380px] w-full rounded-2xl" />
+          <Skeleton className="h-[380px] w-full rounded-2xl" />
         </div>
       </div>
     )
