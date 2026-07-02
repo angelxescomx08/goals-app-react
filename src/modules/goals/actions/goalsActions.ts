@@ -36,6 +36,12 @@ export async function createGoal(data: CreateGoalSchema) {
   }>("/goals", data)
 }
 
+export async function updateGoal(id: string, data: CreateGoalSchema) {
+  return api.put<{
+    goal: GoalSchema
+  }>(`/goals/${id}`, data)
+}
+
 export async function getGoalById(id: string) {
   return api.get<GoalSchema & { units: UnitSchema } & { parentGoal?: GoalSchema } & { children?: GoalSchema[] }>(`/goals/${id}`)
 }

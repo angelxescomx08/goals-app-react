@@ -8,7 +8,7 @@ import { Loader2Icon, PlusIcon, ChevronLeft, TrendingUp, Hash } from "lucide-rea
 
 export const CreateGoalProgressPage = () => {
   const { goalId } = useParams()
-  const { form, createGoalProgressMutation, showProgress } = useCreateGoalProgress(goalId ?? "")
+  const { form, createGoalProgressMutation, showProgress, unit } = useCreateGoalProgress(goalId ?? "")
 
   return (
     <div className="w-full max-w-lg min-h-[calc(100vh-4rem)] bg-slate-50/50 p-0 md:p-6 lg:p-10 flex flex-col items-center mx-auto">
@@ -94,7 +94,7 @@ export const CreateGoalProgressPage = () => {
                         autoComplete="off"
                       />
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">
-                        Unidades
+                        {unit?.pluralName ?? unit?.name ?? "Unidades"}
                       </div>
                     </div>
                     <p className="text-xs text-slate-400">Ingresa el valor total acumulado o el incremento actual.</p>

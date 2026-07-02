@@ -1,10 +1,19 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { parseUTCDate, toUTCISO, isValidISOString } from "./dateUtils";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_URL_SERVER,
   withCredentials: true
 });
+
+export function getApiErrorMessage(error: unknown, fallback = "Ocurrió un error inesperado"): string {
+  if (isAxiosError(error)) {
+    const data = error.response?.data as { error?: string; message?: string } | undefined;
+    return data?.error ?? data?.message ?? fallback;
+  }
+  if (error instanceof Error) return error.message;
+  return fallback;
+}
 
 /**
  * Transforma recursivamente un objeto convirtiendo strings ISO UTC a Date objects

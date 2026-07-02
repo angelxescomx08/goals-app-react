@@ -13,7 +13,7 @@ import { Link } from "react-router"
 export const GoalByIdPage = () => {
   const { id } = useParams()
   const {
-    form, editGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal
+    form, editGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal, handleGoalTypeChange
   } = useEditGoal(id ?? "")
 
   return (
@@ -74,7 +74,11 @@ export const GoalByIdPage = () => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className="grid gap-2">
                   <FieldLabel htmlFor="parentGoalId" className="text-sm font-semibold text-slate-700">Meta padre</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? "null"}>
+                  <Select
+                    key={`${goalsWithTypeGoal.data ? "loaded" : "loading"}-${field.value ?? "null"}`}
+                    onValueChange={field.onChange}
+                    value={field.value ?? "null"}
+                  >
                     <SelectTrigger className="h-11 border-slate-200">
                       <SelectValue placeholder="Selecciona una meta" />
                     </SelectTrigger>
@@ -97,7 +101,7 @@ export const GoalByIdPage = () => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className="grid gap-2">
                   <FieldLabel htmlFor="goalType" className="text-sm font-semibold text-slate-700">Tipo de seguimiento</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? "target"}>
+                  <Select onValueChange={(value) => handleGoalTypeChange(value as typeof field.value)} value={field.value ?? "target"}>
                     <SelectTrigger className="h-11 border-slate-200">
                       <SelectValue placeholder="Selecciona un tipo" />
                     </SelectTrigger>
@@ -126,7 +130,11 @@ export const GoalByIdPage = () => {
                           <Ruler className="w-4 h-4 text-slate-400" /> Unidad
                         </FieldLabel>
                         <div className="flex gap-2">
-                          <Select onValueChange={field.onChange} value={field.value ?? "null"}>
+                          <Select
+                            key={`${units.data ? "loaded" : "loading"}-${field.value ?? "null"}`}
+                            onValueChange={field.onChange}
+                            value={field.value ?? "null"}
+                          >
                             <SelectTrigger className="h-11 bg-white border-slate-200 flex-1">
                               <SelectValue placeholder="Unidad" />
                             </SelectTrigger>

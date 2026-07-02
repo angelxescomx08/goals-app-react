@@ -11,9 +11,9 @@ export const useToggleCompletion = () => {
     onSuccess: async () => {
       queryClient.removeQueries({ queryKey: queryKeys.goals.lists() })
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all, refetchType: "all" }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all, refetchType: "all" }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all, refetchType: "all" }),
       ])
       toast.success("Estado de la meta actualizado correctamente")
     },

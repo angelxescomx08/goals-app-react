@@ -9,7 +9,7 @@ import { Loader2Icon, PlusIcon, Target, NotebookPen, Ruler } from "lucide-react"
 import { CreateUnit } from "@/modules/units/components/CreateUnitDrawer"
 
 export const CreateGoalPage = () => {
-  const { form, createGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal } = useCreateGoal()
+  const { form, createGoalMutation, showTargetAndUnit, units, goalsWithTypeGoal, handleGoalTypeChange } = useCreateGoal()
 
   return (
     <div className="max-w-2xl mx-auto bg-slate-50/50 p-0 md:p-6 lg:p-10">
@@ -82,7 +82,7 @@ export const CreateGoalPage = () => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className="grid gap-2">
                   <FieldLabel htmlFor="goalType" className="text-sm font-semibold text-slate-700">Tipo de seguimiento</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? "target"}>
+                  <Select onValueChange={(value) => handleGoalTypeChange(value as typeof field.value)} value={field.value ?? "target"}>
                     <SelectTrigger className="h-11 border-slate-200">
                       <SelectValue placeholder="Selecciona un tipo" />
                     </SelectTrigger>

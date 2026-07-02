@@ -10,10 +10,10 @@ export const useDeleteGoalProgress = (goalId: string) => {
     mutationFn: deleteGoalProgress,
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.goalProgress.list(goalId) }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.goalProgress.list(goalId), refetchType: "all" }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all, refetchType: "all" }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all, refetchType: "all" }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all, refetchType: "all" }),
       ])
       toast.success("Progreso eliminado correctamente")
     },

@@ -5,11 +5,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { createGoalProgress } from "../actions/goalProgressActions"
 import { useGoalById } from "@/modules/goals/hooks/useGoalById"
+import { useUnitsByUser } from "@/modules/units/hooks/useUnitsByUser"
 import { queryKeys } from "@/lib/queryKeys"
 import { useNavigate } from "react-router"
 
 export const useCreateGoalProgress = (goalId: string) => {
   const { goal } = useGoalById(goalId)
+  const { units } = useUnitsByUser()
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -26,9 +28,9 @@ export const useCreateGoalProgress = (goalId: string) => {
     onSuccess: async () => {
       queryClient.removeQueries({ queryKey: queryKeys.goals.lists() })
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.goals.all, refetchType: "all" }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.statistics.all, refetchType: "all" }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.userStats.all, refetchType: "all" }),
       ])
       toast.success("Progreso registrado correctamente")
       navigate(`/panel/goals/${goalId}`)
@@ -39,10 +41,12 @@ export const useCreateGoalProgress = (goalId: string) => {
   })
 
   const showProgress = !!goal.data?.data && goal.data.data.goalType === "target"
+  const unit = units.data?.data.units.find((u) => u.id === goal.data?.data.unitId)
 
   return {
     form,
     createGoalProgressMutation,
     showProgress,
+    unit,
   }
 }
